@@ -1,0 +1,32 @@
+<launch>
+    <arg name="gui" default="true" />
+    <arg name="wname" default="empty_world" />
+
+    <rosparam file="$(find legged_gazebo)/config/default.yaml" command="load" />
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name"
+            value="$(find fieldai_legged_perceptive_description)/launch/worlds/$(arg wname).world" />
+        <arg name="gui" value="$(arg gui)" />
+    </include>
+
+    <param name="a1_robot_description"
+        command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro
+       robot_type:=a1
+    " />
+    <node name="generate_urdf_a1" pkg="legged_common" type="generate_urdf.sh" output="screen"
+        args="$(find unitree_description)/urdf/robot.xacro a1" />
+    <!-- push robot_description to factory and spawn robot in gazebo -->
+    <node name="spawn_urdf_a1" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+        args="-z 0.5 -param a1_robot_description -urdf -model a1" output="screen" />
+
+    <param name="aliengo_robot_description"
+        command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro
+          robot_type:=aliengo
+       " />
+    <node name="generate_urdf_aliengo" pkg="legged_common" type="generate_urdf.sh" output="screen"
+        args="$(find unitree_description)/urdf/robot.xacro aliengo" />
+    <!-- push robot_description to factory and spawn robot in gazebo -->
+    <node name="spawn_urdf_aliengo" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+        args="-z 0.5 -y 1 -param aliengo_robot_description -urdf -model aliengo" output="screen" />
+
+</launch>
