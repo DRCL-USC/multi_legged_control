@@ -10,6 +10,7 @@ class AliengoController : public legged::LeggedController {
  protected:
 
   bool init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle& controller_nh) override;
+  void setupMpc() override;
 
 
  private:
