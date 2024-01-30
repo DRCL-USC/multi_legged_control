@@ -1,0 +1,10 @@
+<library path="lib/libmulti_controllers">
+
+    <class name="legged/AliengoController"
+           type="legged::AliengoController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+        </description>
+    </class>
+
+</library>

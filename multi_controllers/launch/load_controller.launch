@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<launch>
+      <arg name="robot_type" default="$(env ROBOT_TYPE)"
+            doc="Robot type: [a1, aliengo, go1, laikago]" />
+
+      <param name="urdfFile" value="/tmp/legged_control/$(arg robot_type).urdf" />
+      <param name="taskFile" value="$(find legged_controllers)/config/$(arg robot_type)/task.info" />
+      <param name="referenceFile"
+            value="$(find legged_controllers)/config/$(arg robot_type)/reference.info" />
+      <param name="gaitCommandFile"
+            value="$(find legged_controllers)/config/$(arg robot_type)/gait.info" />
+
+      <rosparam file="$(find multi_controllers)/config/controllers.yaml" command="load" />
+
+      <node name="controller_loader" pkg="controller_manager" type="controller_manager"
+            output="screen"
+            args="load
+            controllers/aliengo_controller
+" />
+
+      <node pkg="fieldai_legged_perceptive_controllers" type="gait_command_node"
+            name="gait_command_node"
+            output="screen" />
+
+      <node pkg="fieldai_legged_perceptive_controllers" type="CmdPublisher" name="CmdPublisher"
+            output="screen" />
+
+</launch>
