@@ -7,4 +7,11 @@
         </description>
     </class>
 
+    <class name="legged/A1Controller"
+           type="legged::A1Controller"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+        </description>
+    </class>
+
 </library>

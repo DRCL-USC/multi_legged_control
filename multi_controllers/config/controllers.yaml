@@ -6,4 +6,6 @@ controllers:
   legged_cheater_controller:
     type: legged/LeggedCheaterController
   aliengo_controller:
-    type: legged/AliengoController  
+    type: legged/AliengoController
+  a1_controller:
+    type: legged/A1Controller      

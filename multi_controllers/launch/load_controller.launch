@@ -17,6 +17,7 @@
             output="screen"
             args="load
             controllers/aliengo_controller
+            controllers/a1_controller
 " />
 
       <node pkg="fieldai_legged_perceptive_controllers" type="gait_command_node"
