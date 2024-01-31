@@ -14,7 +14,6 @@ namespace legged {
 bool AliengoController::init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle& controller_nh){
   
   // Initialize OCS2
-  const std::string robotName = "aliengo";
   std::string urdfFile;
   std::string taskFile;
   std::string referenceFile;
@@ -72,7 +71,6 @@ void AliengoController::setupMpc() {
 
   ros::NodeHandle nh;
   // Gait receiver
-  const std::string robotName = "legged_robot";
   auto gaitReceiverPtr =
       std::make_shared<GaitReceiver>(nh, leggedInterface_->getSwitchedModelReferenceManagerPtr()->getGaitSchedule(), robotName);
   // ROS ReferenceManager

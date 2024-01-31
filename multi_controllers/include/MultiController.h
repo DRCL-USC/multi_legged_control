@@ -14,6 +14,7 @@ class AliengoController : public legged::LeggedController {
 
 
  private:
+ const std::string robotName = "aliengo";
 };
 
 class A1Controller : public legged::LeggedController {

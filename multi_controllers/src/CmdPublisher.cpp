@@ -89,14 +89,7 @@ TargetTrajectories cmdVelToTargetTrajectories(const vector_t& cmdVel, const Syst
 
 int main(int argc, char** argv) {
 
-  // Check if the correct number of command-line arguments is provided
-    // if (argc != 2)
-    // {
-    //     ROS_ERROR("Provide robot name as argument.");
-    //     return 1;
-    // }
-
-  const std::string robotName = "legged_robot";
+  const std::string robotName = argv[1];
 
   // Initialize ros node
   ::ros::init(argc, argv, robotName + "_target");
@@ -104,8 +97,8 @@ int main(int argc, char** argv) {
   // Get node parameters
   std::string referenceFile;
   std::string taskFile;
-  nodeHandle.getParam("/aliengoreferenceFile", referenceFile);
-  nodeHandle.getParam("/aliengotaskFile", taskFile);
+  nodeHandle.getParam("/" + robotName+ "referenceFile", referenceFile);
+  nodeHandle.getParam("/" + robotName+ "taskFile", taskFile);
 
   loadData::loadCppDataType(referenceFile, "comHeight", COM_HEIGHT);
   loadData::loadEigenMatrix(referenceFile, "defaultJointState", DEFAULT_JOINT_STATE);

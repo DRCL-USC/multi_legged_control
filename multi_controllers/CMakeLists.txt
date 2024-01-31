@@ -8,8 +8,8 @@ find_package(catkin REQUIRED
         roscpp
         controller_interface
         legged_controllers
-        loco_manipulation_interface
-        )
+        fieldai_legged_perceptive_controllers
+        )   
 
 catkin_package(
         INCLUDE_DIRS
@@ -20,7 +20,7 @@ catkin_package(
         roscpp
         controller_interface
         legged_controllers
-        loco_manipulation_interface
+        fieldai_legged_perceptive_controllers
 )
 
 ###########
@@ -49,6 +49,9 @@ add_executable(CmdPublisher
 target_link_libraries(CmdPublisher
         ${catkin_LIBRARIES}
         )
+
+add_executable(gait_command_node src/GaitCommandNode.cpp ${SRC_LIST})
+target_link_libraries(gait_command_node ${catkin_LIBRARIES})        
 
 #########################
 ###   CLANG TOOLING   ###
