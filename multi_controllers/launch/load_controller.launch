@@ -14,7 +14,7 @@
       <rosparam file="$(find multi_controllers)/config/controllers.yaml" command="load" />
 
       <node name="controller_loader" pkg="controller_manager" type="controller_manager"
-            output="screen"
+            output="screen" ns="$(arg robot_type)"
             args="load
             controllers/$(arg robot_type)_controller
 " />
