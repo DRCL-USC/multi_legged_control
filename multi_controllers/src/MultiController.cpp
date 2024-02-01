@@ -153,11 +153,11 @@ void A1Controller::setupMpc() {
   observationPublisher_ = nh.advertise<ocs2_msgs::mpc_observation>(robotName + "_mpc_observation", 1);
 }
 
-// void A1Controller::setupLeggedInterface(const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
-//                                             bool verbose) {
-//   leggedInterface_ = std::make_shared<MultiLeggedInterface>(robotName, taskFile, urdfFile, referenceFile);
-//   leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
-// }
+void A1Controller::setupLeggedInterface(const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
+                                            bool verbose) {                                           
+  leggedInterface_ = std::make_shared<MultiLeggedInterface>(robotName, taskFile, urdfFile, referenceFile);
+  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+}
 
 
 }  // namespace legged

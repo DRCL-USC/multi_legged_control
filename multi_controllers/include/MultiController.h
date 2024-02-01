@@ -23,11 +23,8 @@ namespace legged
     protected:
         bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &controller_nh) override;
         void setupMpc() override;
-        // void setupLeggedInterface(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
-        //                           bool verbose) override;
-
-    protected:
-        // std::shared_ptr<MultiLeggedInterface> leggedInterface_;
+        void setupLeggedInterface(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
+                                  bool verbose) override;
 
     private:
         const std::string robotName = "a1";
