@@ -1,6 +1,9 @@
 aliengo:  
   controllers:
     aliengo_controller:
-      type: legged/AliengoController
+      type: legged/AliengoController    
+
+a1:  
+  controllers:
     a1_controller:
-      type: legged/A1Controller      
+      type: legged/A1Controller   

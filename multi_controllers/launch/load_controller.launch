@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_type" default="$(env ROBOT_TYPE)"
+      <arg name="robot_type" default="a1"
             doc="Robot type: [a1, aliengo, go1, laikago]" />
 
       <param name="$(arg robot_type)urdfFile" value="/tmp/legged_control/$(arg robot_type).urdf" />

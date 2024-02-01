@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_type" default="$(env ROBOT_TYPE)"
+      <arg name="robot_type" default="a1"
             doc="Robot type: [a1, aliengo, go1, laikago]" />
             
       <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
-            output="screen" ns="$(arg robot_type)" args="aliengo_controller start" /> 
+            output="screen" ns="$(arg robot_type)" args="$(arg robot_type)_controller start" /> 
 
 </launch>
