@@ -5,6 +5,6 @@
             doc="Robot type: [a1, aliengo, go1, laikago]" />
             
       <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
-            output="screen" ns="$(arg robot_type)" args="$(arg robot_type)_controller start" /> 
+            output="screen" ns="$(arg robot_type)" args="multi_legged_controller start" /> 
 
 </launch>

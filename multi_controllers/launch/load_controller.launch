@@ -14,7 +14,7 @@
       <node name="$(arg robot_type)_controller_loader" pkg="controller_manager" type="controller_manager"
             output="screen" ns="$(arg robot_type)"
             args="load
-            controllers/$(arg robot_type)_controller
+            controllers/multi_legged_controller
 " />
 
       <node pkg="multi_controllers" type="gait_command_node" name="$(arg robot_type)_gait_command_node" args="$(arg robot_type)"

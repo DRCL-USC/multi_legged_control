@@ -1,14 +1,7 @@
 <library path="lib/libmulti_controllers">
 
-    <class name="legged/AliengoController"
-           type="legged::AliengoController"
-           base_class_type="controller_interface::ControllerBase">
-        <description>
-        </description>
-    </class>
-
-    <class name="legged/A1Controller"
-           type="legged::A1Controller"
+    <class name="legged/MultiLeggedController"
+           type="legged::MultiLeggedController"
            base_class_type="controller_interface::ControllerBase">
         <description>
         </description>

@@ -33,7 +33,7 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME}
-        src/MultiController.cpp
+        src/MultiLeggedController.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}
