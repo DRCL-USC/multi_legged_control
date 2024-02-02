@@ -1,28 +1,26 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_type" default="a1"
+      <arg name="robot_type" default="aliengo"
             doc="Robot type: [a1, aliengo, go1, laikago]" />
 
-      <param name="$(arg robot_type)urdfFile" value="/tmp/legged_control/$(arg robot_type).urdf" />
-      <param name="$(arg robot_type)taskFile" value="$(find legged_controllers)/config/$(arg robot_type)/task.info" />
-      <param name="$(arg robot_type)referenceFile"
-            value="$(find legged_controllers)/config/$(arg robot_type)/reference.info" />
-      <param name="$(arg robot_type)gaitCommandFile"
-            value="$(find legged_controllers)/config/$(arg robot_type)/gait.info" />
+      <param name="/$(arg robot_type)/urdfFile" value="/tmp/legged_control/$(arg robot_type).urdf" />
+      <param name="/$(arg robot_type)/taskFile" value="$(find legged_controllers)/config/$(arg robot_type)/task.info" />
+      <param name="/$(arg robot_type)/referenceFile" value="$(find legged_controllers)/config/$(arg robot_type)/reference.info" />
+      <param name="/$(arg robot_type)/gaitCommandFile" value="$(find legged_controllers)/config/$(arg robot_type)/gait.info" />
 
       <rosparam file="$(find multi_controllers)/config/controllers.yaml" command="load" />
 
-      <node name="controller_loader" pkg="controller_manager" type="controller_manager"
+      <node name="$(arg robot_type)_controller_loader" pkg="controller_manager" type="controller_manager"
             output="screen" ns="$(arg robot_type)"
             args="load
             controllers/$(arg robot_type)_controller
 " />
 
-      <node pkg="multi_controllers" type="gait_command_node" name="gait_command_node" args="$(arg robot_type)"
+      <node pkg="multi_controllers" type="gait_command_node" name="$(arg robot_type)_gait_command_node" args="$(arg robot_type)"
             output="screen" />
 
-      <node pkg="multi_controllers" type="CmdPublisher" name="CmdPublisher" args="$(arg robot_type)"
+      <node pkg="multi_controllers" type="CmdPublisher" name="$(arg robot_type)_CmdPublisher" args="$(arg robot_type)"
             output="screen" />
 
 </launch>

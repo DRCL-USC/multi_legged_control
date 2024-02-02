@@ -13,9 +13,12 @@ namespace legged
     protected:
         bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &controller_nh) override;
         void setupMpc() override;
+        void setupLeggedInterface(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
+                                  bool verbose) override;
+        void update(const ros::Time &time, const ros::Duration &period) override;                          
 
     private:
-        const std::string robotName = "aliengo";
+        std::string robotName;
     };
 
     class A1Controller : public legged::LeggedController
@@ -25,9 +28,10 @@ namespace legged
         void setupMpc() override;
         void setupLeggedInterface(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
                                   bool verbose) override;
+        void update(const ros::Time &time, const ros::Duration &period) override;                          
 
     private:
-        const std::string robotName = "a1";
+        std::string robotName;
     };
 
 } // namespace legged

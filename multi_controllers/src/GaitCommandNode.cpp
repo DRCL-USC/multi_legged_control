@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
   ros::NodeHandle nodeHandle;
   // Get node parameters
   std::string gaitCommandFile;
-  nodeHandle.getParam("/" + robotName + "gaitCommandFile", gaitCommandFile);
+  nodeHandle.getParam("/" + robotName + "/gaitCommandFile", gaitCommandFile);
   std::cerr << "Loading gait file: " << gaitCommandFile << std::endl;
 
   GaitPublisher gaitCommand(nodeHandle, gaitCommandFile, robotName, true);

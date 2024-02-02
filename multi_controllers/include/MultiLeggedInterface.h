@@ -6,7 +6,6 @@ namespace legged
   class MultiLeggedInterface : public legged::LeggedInterface
   {
   public:
-  // using LeggedInterface::LeggedInterface;
     MultiLeggedInterface(const std::string robotName, const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
                          bool useHardFrictionConeConstraint = false)
         : LeggedInterface(taskFile, urdfFile, referenceFile, useHardFrictionConeConstraint)
