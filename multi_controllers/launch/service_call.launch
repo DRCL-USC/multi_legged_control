@@ -4,12 +4,13 @@
       <arg name="robot_type" default="a1"
             doc="Robot type: [a1, aliengo, go1, laikago]" />
             
-      <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
-            output="screen" ns="$(arg robot_type)" args="multi_legged_controller start" /> 
+      <group ns="$(arg robot_type)">
+            <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
+            output="screen" args="multi_legged_controller start" /> 
 
-      <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 
-            output="screen" ns="$(arg robot_type)">
-      </node>      
+            <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 
+                  output="screen" />      
+      </group>      
             
 
 </launch>
