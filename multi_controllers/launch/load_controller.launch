@@ -11,16 +11,18 @@
 
       <rosparam file="$(find multi_controllers)/config/controllers.yaml" command="load" />
 
-      <node name="$(arg robot_type)_controller_loader" pkg="controller_manager" type="controller_manager"
+      <node name="controller_loader" pkg="controller_manager" type="controller_manager"
             output="screen" ns="$(arg robot_type)"
             args="load
             controllers/multi_legged_controller
 " />
 
-      <node pkg="multi_controllers" type="gait_command_node" name="$(arg robot_type)_gait_command_node" args="$(arg robot_type)"
-            output="screen" />
+      <node pkg="fieldai_legged_perceptive_controllers" type="gait_command_node" name="gait_command_node"
+            output="screen" ns="$(arg robot_type)">         
+      </node>
 
-      <node pkg="multi_controllers" type="CmdPublisher" name="$(arg robot_type)_CmdPublisher" args="$(arg robot_type)"
-            output="screen" />
+      <node pkg="fieldai_legged_perceptive_controllers" type="CmdPublisher" name="CmdPublisher"
+            output="screen" ns="$(arg robot_type)">
+      </node>
 
 </launch>

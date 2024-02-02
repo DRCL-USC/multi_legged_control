@@ -7,4 +7,9 @@
       <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
             output="screen" ns="$(arg robot_type)" args="multi_legged_controller start" /> 
 
+      <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 
+            output="screen" ns="$(arg robot_type)">
+      </node>      
+            
+
 </launch>

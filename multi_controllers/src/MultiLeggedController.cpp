@@ -35,7 +35,10 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   bool verbose = false;
   loadData::loadCppDataType(taskFile, "legged_robot_interface.verbose", verbose);
 
-  setupLeggedInterface(taskFile, urdfFile, referenceFile, verbose);
+  // Setup the legged interface
+  leggedInterface_ = std::make_shared<MultiLeggedInterface>(robotName, taskFile, urdfFile, referenceFile);
+  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+
   setupMpc();
   setupMrt();
 
@@ -83,22 +86,17 @@ void MultiLeggedController::setupMpc() {
   rbdConversions_ = std::make_shared<CentroidalModelRbdConversions>(leggedInterface_->getPinocchioInterface(),
                                                                     leggedInterface_->getCentroidalModelInfo());
 
-  ros::NodeHandle nh;
+  const std::string robot_Name = "legged_robot";
+  ros::NodeHandle nh(robotName);
   // Gait receiver
   auto gaitReceiverPtr =
-      std::make_shared<GaitReceiver>(nh, leggedInterface_->getSwitchedModelReferenceManagerPtr()->getGaitSchedule(), robotName);
+      std::make_shared<GaitReceiver>(nh, leggedInterface_->getSwitchedModelReferenceManagerPtr()->getGaitSchedule(), robot_Name);
   // ROS ReferenceManager
-  auto rosReferenceManagerPtr = std::make_shared<RosReferenceManager>(robotName, leggedInterface_->getReferenceManagerPtr());
+  auto rosReferenceManagerPtr = std::make_shared<RosReferenceManager>(robot_Name, leggedInterface_->getReferenceManagerPtr());
   rosReferenceManagerPtr->subscribe(nh);
   mpc_->getSolverPtr()->addSynchronizedModule(gaitReceiverPtr);
   mpc_->getSolverPtr()->setReferenceManager(rosReferenceManagerPtr);
-  observationPublisher_ = nh.advertise<ocs2_msgs::mpc_observation>(robotName + "_mpc_observation", 1);
-}
-
-void MultiLeggedController::setupLeggedInterface(const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
-                                            bool verbose) {                                           
-  leggedInterface_ = std::make_shared<MultiLeggedInterface>(robotName, taskFile, urdfFile, referenceFile);
-  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+  observationPublisher_ = nh.advertise<ocs2_msgs::mpc_observation>(robot_Name + "_mpc_observation", 1);
 }
 
 void MultiLeggedController::update(const ros::Time& time, const ros::Duration& period) {

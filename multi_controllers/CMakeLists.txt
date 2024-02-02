@@ -43,15 +43,15 @@ target_link_libraries(${PROJECT_NAME}
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 
 # Cmd publish node
-add_executable(CmdPublisher
-        src/CmdPublisher.cpp
-        )
-target_link_libraries(CmdPublisher
-        ${catkin_LIBRARIES}
-        )
+# add_executable(CmdPublisher
+#         src/CmdPublisher.cpp
+#         )
+# target_link_libraries(CmdPublisher
+#         ${catkin_LIBRARIES}
+#         )
 
-add_executable(gait_command_node src/GaitCommandNode.cpp ${SRC_LIST})
-target_link_libraries(gait_command_node ${catkin_LIBRARIES})        
+# add_executable(gait_command_node src/GaitCommandNode.cpp ${SRC_LIST})
+# target_link_libraries(gait_command_node ${catkin_LIBRARIES})        
 
 #########################
 ###   CLANG TOOLING   ###
