@@ -12,11 +12,7 @@ namespace legged
     {
     protected:
         bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &controller_nh) override;
-        void setupMpc() override;
-        void update(const ros::Time &time, const ros::Duration &period) override;                          
-
-    private:
-        std::string robotName;
+        void update(const ros::Time &time, const ros::Duration &period) override;
     };
 
 } // namespace legged

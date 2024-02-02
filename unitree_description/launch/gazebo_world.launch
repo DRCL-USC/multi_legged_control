@@ -1,7 +1,10 @@
 <launch>
     <arg name="gui" default="true" />
     <arg name="wname" default="empty_world" />
-    <arg name="robot_type" default="$(env ROBOT_TYPE)" doc="Robot type: [a1, aliengo, go1, laikago]"/>
+    <arg name="robot_type_1" default="aliengo" doc="Robot type: [a1, aliengo, go1, laikago]"/>
+    <arg name="robot_type_2" default="a1" />
+    <arg name="robot_name_1" default="$(arg robot_type_1)"/>
+    <arg name="robot_name_2" default="$(arg robot_type_2)"/>
 
     <rosparam file="$(find unitree_description)/config/gazebo.yaml" command="load" />
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -10,34 +13,30 @@
         <arg name="gui" value="$(arg gui)" />
     </include>
 
-    <param name="aliengo_robot_description" command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro
-       robot_type:=aliengo
-    "/>
-    <node name="generate_urdf" pkg="legged_common" type="generate_urdf.sh" output="screen"
-          args="$(find unitree_description)/urdf/robot.xacro aliengo"/>
+    <group ns="$(arg robot_name_1)">
+        <param name="legged_robot_description" 
+            command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro 
+            robot_name:=$(arg robot_name_1) robot_type:=$(arg robot_type_1)"/>
 
-    <!-- push robot_description to factory and spawn robot in gazebo -->
-    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-          args="-z 0.5 -param aliengo_robot_description -urdf -model aliengo" output="screen"/>
+        <node name="generate_urdf" pkg="legged_common" type="generate_urdf.sh" output="screen"
+          args="$(find unitree_description)/urdf/robot.xacro $(arg robot_type_1)"/>
 
-    <param name="a1_robot_description"
-        command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro
-       robot_type:=a1
-    " />
-    <node name="generate_urdf_a1" pkg="legged_common" type="generate_urdf.sh" output="screen"
-        args="$(find unitree_description)/urdf/robot.xacro a1" />
+        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+          args="-z 0.5 -param legged_robot_description -urdf -model $(arg robot_name_1)" output="screen"/>     
+    </group> 
+
     
-    <node name="spawn_urdf_a1" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-        args="-z 0.5 -y 1 -param a1_robot_description -urdf -model a1" output="screen" />
+    <group ns="$(arg robot_name_2)">
+        <param name="legged_robot_description"
+            command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro 
+            robot_name:=$(arg robot_name_2) robot_type:=$(arg robot_type_2)"/>
 
-    <!-- <param name="aliengo_robot_description"
-        command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro
-          robot_type:=aliengo
-       " />
-    <node name="generate_urdf_aliengo" pkg="legged_common" type="generate_urdf.sh" output="screen"
-        args="$(find unitree_description)/urdf/robot.xacro aliengo" />
+        <node name="generate_urdf" pkg="legged_common" type="generate_urdf.sh" output="screen"
+            args="$(find unitree_description)/urdf/robot.xacro $(arg robot_type_2)" />
+        
+        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+            args="-z 0.5 -y 1 -param legged_robot_description -urdf -model $(arg robot_name_2)" output="screen" />
+    </group>
     
-    <node name="spawn_urdf_aliengo" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-        args="-z 0.5 -y 1 -param aliengo_robot_description -urdf -model aliengo" output="screen" /> -->
 
 </launch>

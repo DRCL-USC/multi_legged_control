@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_type" default="a1"
-            doc="Robot type: [a1, aliengo, go1, laikago]" />
+      <arg name="robot_name" default="a1" />
             
-      <group ns="$(arg robot_type)">
+      <group ns="$(arg robot_name)">
             <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
             output="screen" args="multi_legged_controller start" /> 
 

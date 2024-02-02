@@ -14,49 +14,67 @@ namespace legged {
 
 bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle& controller_nh){
   
-  std::string name_space = controller_nh.getNamespace();
+  std::string ns = controller_nh.getNamespace();
   // Extract the robot name from the namespace
-  size_t stop = name_space.find("/controllers");
+  size_t stop = ns.find("/controllers");
   if (stop != std::string::npos) {
-    robotName = name_space.substr(1,stop-1);
+    ns = ns.substr(1,stop-1);
   }
   else {
-    ROS_ERROR_STREAM("Could not extract robot name from namespace: " << name_space);
+    ROS_ERROR_STREAM("Could not extract robot name from namespace: " << ns);
     return false;
   }
+
+  ros::NodeHandle nh(ns);
   
   // Initialize OCS2
   std::string urdfFile;
   std::string taskFile;
   std::string referenceFile;
-  controller_nh.getParam("/" + robotName + "/urdfFile", urdfFile);
-  controller_nh.getParam("/" + robotName + "/taskFile", taskFile);
-  controller_nh.getParam("/" + robotName + "/referenceFile", referenceFile);
+  nh.getParam("urdfFile", urdfFile);
+  nh.getParam("taskFile", taskFile);
+  nh.getParam("referenceFile", referenceFile);
   bool verbose = false;
   loadData::loadCppDataType(taskFile, "legged_robot_interface.verbose", verbose);
 
   // Setup the legged interface
-  leggedInterface_ = std::make_shared<MultiLeggedInterface>(robotName, taskFile, urdfFile, referenceFile);
+  leggedInterface_ = std::make_shared<MultiLeggedInterface>(ns, taskFile, urdfFile, referenceFile);
   leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
 
-  setupMpc();
+  // Setup the MPC
+  mpc_ = std::make_shared<SqpMpc>(leggedInterface_->mpcSettings(), leggedInterface_->sqpSettings(),
+                                  leggedInterface_->getOptimalControlProblem(), leggedInterface_->getInitializer());
+  rbdConversions_ = std::make_shared<CentroidalModelRbdConversions>(leggedInterface_->getPinocchioInterface(),
+                                                                    leggedInterface_->getCentroidalModelInfo());
+
+  const std::string robot_Name = "legged_robot";
+  // Gait receiver
+  auto gaitReceiverPtr =
+      std::make_shared<GaitReceiver>(nh, leggedInterface_->getSwitchedModelReferenceManagerPtr()->getGaitSchedule(), robot_Name);
+  // ROS ReferenceManager
+  auto rosReferenceManagerPtr = std::make_shared<RosReferenceManager>(robot_Name, leggedInterface_->getReferenceManagerPtr());
+  rosReferenceManagerPtr->subscribe(nh);
+  mpc_->getSolverPtr()->addSynchronizedModule(gaitReceiverPtr);
+  mpc_->getSolverPtr()->setReferenceManager(rosReferenceManagerPtr);
+  observationPublisher_ = nh.advertise<ocs2_msgs::mpc_observation>(robot_Name + "_mpc_observation", 1);
+
+ // Setup MRT
   setupMrt();
 
   // Visualization
-  ros::NodeHandle nh;
   CentroidalModelPinocchioMapping pinocchioMapping(leggedInterface_->getCentroidalModelInfo());
   eeKinematicsPtr_ = std::make_shared<PinocchioEndEffectorKinematics>(leggedInterface_->getPinocchioInterface(), pinocchioMapping,
                                                                       leggedInterface_->modelSettings().contactNames3DoF);
-  // robotVisualizer_ = std::make_shared<LeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
-  //                                                            leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
-  // selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
-  //                                                                        leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));
+  robotVisualizer_ = std::make_shared<LeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
+                                                             leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
+  selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
+                                                                         leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));
 
   // Hardware interface
   auto* hybridJointInterface = robot_hw->get<HybridJointInterface>();
-  std::vector<std::string> joint_names{robotName + "_LF_HAA", robotName + "_LF_HFE", robotName + "_LF_KFE", robotName + "_LH_HAA", 
-                                       robotName + "_LH_HFE", robotName + "_LH_KFE", robotName + "_RF_HAA", robotName + "_RF_HFE", 
-                                       robotName + "_RF_KFE", robotName + "_RH_HAA", robotName + "_RH_HFE", robotName + "_RH_KFE"};
+  std::vector<std::string> joint_names{ns + "_LF_HAA", ns + "_LF_HFE", ns + "_LF_KFE", ns + "_LH_HAA", 
+                                       ns + "_LH_HFE", ns + "_LH_KFE", ns + "_RF_HAA", ns + "_RF_HFE", 
+                                       ns + "_RF_KFE", ns + "_RH_HAA", ns + "_RH_HFE", ns + "_RH_KFE"};
   for (const auto& joint_name : joint_names) {
     hybridJointHandles_.push_back(hybridJointInterface->getHandle(joint_name));
   }
@@ -78,25 +96,6 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   safetyChecker_ = std::make_shared<SafetyChecker>(leggedInterface_->getCentroidalModelInfo());
 
   return true;
-}
-
-void MultiLeggedController::setupMpc() {
-  mpc_ = std::make_shared<SqpMpc>(leggedInterface_->mpcSettings(), leggedInterface_->sqpSettings(),
-                                  leggedInterface_->getOptimalControlProblem(), leggedInterface_->getInitializer());
-  rbdConversions_ = std::make_shared<CentroidalModelRbdConversions>(leggedInterface_->getPinocchioInterface(),
-                                                                    leggedInterface_->getCentroidalModelInfo());
-
-  const std::string robot_Name = "legged_robot";
-  ros::NodeHandle nh(robotName);
-  // Gait receiver
-  auto gaitReceiverPtr =
-      std::make_shared<GaitReceiver>(nh, leggedInterface_->getSwitchedModelReferenceManagerPtr()->getGaitSchedule(), robot_Name);
-  // ROS ReferenceManager
-  auto rosReferenceManagerPtr = std::make_shared<RosReferenceManager>(robot_Name, leggedInterface_->getReferenceManagerPtr());
-  rosReferenceManagerPtr->subscribe(nh);
-  mpc_->getSolverPtr()->addSynchronizedModule(gaitReceiverPtr);
-  mpc_->getSolverPtr()->setReferenceManager(rosReferenceManagerPtr);
-  observationPublisher_ = nh.advertise<ocs2_msgs::mpc_observation>(robot_Name + "_mpc_observation", 1);
 }
 
 void MultiLeggedController::update(const ros::Time& time, const ros::Duration& period) {
