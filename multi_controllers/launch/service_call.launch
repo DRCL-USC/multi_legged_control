@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_name" default="a1" />
+      <arg name="robot_name" default="$(env ROBOT_NAME)"/>  
             
       <group ns="$(arg robot_name)">
             <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"

@@ -1,42 +1,12 @@
 <launch>
     <arg name="gui" default="true" />
     <arg name="wname" default="empty_world" />
-    <arg name="robot_type_1" default="aliengo" doc="Robot type: [a1, aliengo, go1, laikago]"/>
-    <arg name="robot_type_2" default="a1" />
-    <arg name="robot_name_1" default="$(arg robot_type_1)"/>
-    <arg name="robot_name_2" default="$(arg robot_type_2)"/>
 
-    <rosparam file="$(find unitree_description)/config/gazebo.yaml" command="load" />
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name"
             value="$(find fieldai_legged_perceptive_description)/launch/worlds/$(arg wname).world" />
         <arg name="gui" value="$(arg gui)" />
     </include>
-
-    <group ns="$(arg robot_name_1)">
-        <param name="legged_robot_description" 
-            command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro 
-            robot_name:=$(arg robot_name_1) robot_type:=$(arg robot_type_1)"/>
-
-        <node name="generate_urdf" pkg="legged_common" type="generate_urdf.sh" output="screen"
-          args="$(find unitree_description)/urdf/robot.xacro $(arg robot_type_1)"/>
-
-        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-          args="-z 0.5 -param legged_robot_description -urdf -model $(arg robot_name_1)" output="screen"/>     
-    </group> 
-
-    
-    <group ns="$(arg robot_name_2)">
-        <param name="legged_robot_description"
-            command="$(find xacro)/xacro $(find unitree_description)/urdf/robot.xacro 
-            robot_name:=$(arg robot_name_2) robot_type:=$(arg robot_type_2)"/>
-
-        <node name="generate_urdf" pkg="legged_common" type="generate_urdf.sh" output="screen"
-            args="$(find unitree_description)/urdf/robot.xacro $(arg robot_type_2)" />
-        
-        <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-            args="-z 0.5 -y 1 -param legged_robot_description -urdf -model $(arg robot_name_2)" output="screen" />
-    </group>
     
 
 </launch>

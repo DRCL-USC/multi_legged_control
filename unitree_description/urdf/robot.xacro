@@ -40,19 +40,19 @@
     <xacro:IMU connected_to="base" imu_name="unitree_imu" xyz="0. 0. 0." rpy="0. 0. 0."/>
 
 
-    <xacro:leg prefix="$(arg robot_name)_LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True">
+    <xacro:leg prefix="LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True">
         <origin rpy="0 0 0" xyz="${leg_offset_x} ${leg_offset_y} 0"/>
     </xacro:leg>
 
-    <xacro:leg prefix="$(arg robot_name)_LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False">
+    <xacro:leg prefix="LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False">
         <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
     </xacro:leg>
 
-    <xacro:leg prefix="$(arg robot_name)_RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True">
+    <xacro:leg prefix="RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True">
         <origin rpy="0 0 0" xyz="${leg_offset_x} ${-leg_offset_y} 0"/>
     </xacro:leg>
 
-    <xacro:leg prefix="$(arg robot_name)_RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False">
+    <xacro:leg prefix="RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False">
         <origin rpy="0 0 0" xyz="${-leg_offset_x} ${-leg_offset_y} 0"/>
     </xacro:leg>
 

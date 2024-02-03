@@ -37,9 +37,7 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   bool verbose = false;
   loadData::loadCppDataType(taskFile, "legged_robot_interface.verbose", verbose);
 
-  // Setup the legged interface
-  leggedInterface_ = std::make_shared<MultiLeggedInterface>(ns, taskFile, urdfFile, referenceFile);
-  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+  setupLeggedInterface(taskFile, urdfFile, referenceFile, verbose);
 
   // Setup the MPC
   mpc_ = std::make_shared<SqpMpc>(leggedInterface_->mpcSettings(), leggedInterface_->sqpSettings(),
@@ -72,9 +70,8 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
 
   // Hardware interface
   auto* hybridJointInterface = robot_hw->get<HybridJointInterface>();
-  std::vector<std::string> joint_names{ns + "_LF_HAA", ns + "_LF_HFE", ns + "_LF_KFE", ns + "_LH_HAA", 
-                                       ns + "_LH_HFE", ns + "_LH_KFE", ns + "_RF_HAA", ns + "_RF_HFE", 
-                                       ns + "_RF_KFE", ns + "_RH_HAA", ns + "_RH_HFE", ns + "_RH_KFE"};
+  std::vector<std::string> joint_names{"LF_HAA", "LF_HFE", "LF_KFE", "LH_HAA", "LH_HFE", "LH_KFE",
+                                       "RF_HAA", "RF_HFE", "RF_KFE", "RH_HAA", "RH_HFE", "RH_KFE"};
   for (const auto& joint_name : joint_names) {
     hybridJointHandles_.push_back(hybridJointInterface->getHandle(joint_name));
   }
@@ -96,49 +93,6 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   safetyChecker_ = std::make_shared<SafetyChecker>(leggedInterface_->getCentroidalModelInfo());
 
   return true;
-}
-
-void MultiLeggedController::update(const ros::Time& time, const ros::Duration& period) {
-  // State Estimate
-  updateStateEstimation(time, period);
-
-  // Update the current state of the system
-  mpcMrtInterface_->setCurrentObservation(currentObservation_);
-
-  // Load the latest MPC policy
-  mpcMrtInterface_->updatePolicy();
-
-  // Evaluate the current policy
-  vector_t optimizedState, optimizedInput;
-  size_t plannedMode = 0;  // The mode that is active at the time the policy is evaluated at.
-  mpcMrtInterface_->evaluatePolicy(currentObservation_.time, currentObservation_.state, optimizedState, optimizedInput, plannedMode);
-
-  // Whole body control
-  currentObservation_.input = optimizedInput;
-
-  vector_t x = wbc_->update(optimizedState, optimizedInput, measuredRbdState_, plannedMode, period.toSec());
-
-  vector_t torque = x.tail(12);
-
-  vector_t posDes = centroidal_model::getJointAngles(optimizedState, leggedInterface_->getCentroidalModelInfo());
-  vector_t velDes = centroidal_model::getJointVelocities(optimizedInput, leggedInterface_->getCentroidalModelInfo());
-
-  // Safety check, if failed, stop the controller
-  if (!safetyChecker_->check(currentObservation_, optimizedState, optimizedInput)) {
-    ROS_ERROR_STREAM("[Legged Controller] Safety check failed, stopping the controller.");
-    stopRequest(time);
-  }
-
-  for (size_t j = 0; j < leggedInterface_->getCentroidalModelInfo().actuatedDofNum; ++j) {
-    hybridJointHandles_[j].setCommand(posDes(j), velDes(j), 0, 3, torque(j));
-  }
-
-  // Visualization
-  // robotVisualizer_->update(currentObservation_, mpcMrtInterface_->getPolicy(), mpcMrtInterface_->getCommand());
-  // selfCollisionVisualization_->update(currentObservation_);
-
-  // Publish the observation. Only needed for the command interface
-  observationPublisher_.publish(ros_msg_conversions::createObservationMsg(currentObservation_));
 }
 
 }  // namespace legged

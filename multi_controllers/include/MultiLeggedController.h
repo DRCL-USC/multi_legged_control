@@ -1,7 +1,6 @@
 
 
 #include <legged_controllers/LeggedController.h>
-#include "MultiLeggedInterface.h"
 
 namespace legged
 {
@@ -12,7 +11,6 @@ namespace legged
     {
     protected:
         bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &controller_nh) override;
-        void update(const ros::Time &time, const ros::Duration &period) override;
     };
 
 } // namespace legged
