@@ -8,7 +8,7 @@ find_package(catkin REQUIRED
         roscpp
         controller_interface
         legged_controllers
-        fieldai_legged_perceptive_controllers
+        legged_deployment
         )   
 
 catkin_package(
@@ -20,7 +20,7 @@ catkin_package(
         roscpp
         controller_interface
         legged_controllers
-        fieldai_legged_perceptive_controllers
+        legged_deployment
 )
 
 ###########
@@ -50,8 +50,8 @@ target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 #         ${catkin_LIBRARIES}
 #         )
 
-# add_executable(gait_command_node src/GaitCommandNode.cpp ${SRC_LIST})
-# target_link_libraries(gait_command_node ${catkin_LIBRARIES})        
+add_executable(move_box_node src/move_box.cpp)
+target_link_libraries(move_box_node ${catkin_LIBRARIES})        
 
 #########################
 ###   CLANG TOOLING   ###

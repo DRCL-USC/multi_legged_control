@@ -4,7 +4,7 @@
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name"
-            value="$(find fieldai_legged_perceptive_description)/launch/worlds/$(arg wname).world" />
+            value="$(find custom_description)/launch/worlds/$(arg wname).world" />
         <arg name="gui" value="$(arg gui)" />
     </include>
     

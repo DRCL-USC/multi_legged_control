@@ -4,7 +4,7 @@
       <arg name="robot_name" default="$(env ROBOT_NAME)"/>  
             
       <group ns="$(arg robot_name)">
-            <node name="service" pkg="fieldai_legged_perceptive_controllers" type="controller_client_node"
+            <node name="service" pkg="legged_deployment" type="controller_client_node"
             output="screen" args="multi_legged_controller start" /> 
 
             <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 

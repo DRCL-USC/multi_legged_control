@@ -33,10 +33,10 @@
                   args="load
                   controllers/multi_legged_controller" />
 
-            <node pkg="fieldai_legged_perceptive_controllers" type="gait_command_node" name="gait_command_node"
+            <node pkg="legged_deployment" type="gait_command_node" name="gait_command_node"
                   output="screen" />
 
-            <node pkg="fieldai_legged_perceptive_controllers" type="CmdPublisher" name="CmdPublisher"
+            <node pkg="legged_deployment" type="CmdPublisher" name="CmdPublisher"
                   output="screen"/>
        </group>     
 
