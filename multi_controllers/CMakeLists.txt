@@ -7,7 +7,6 @@ find_package(catkin REQUIRED
         COMPONENTS
         roscpp
         controller_interface
-        legged_controllers
         legged_deployment
         )   
 
@@ -19,7 +18,6 @@ catkin_package(
         CATKIN_DEPENDS
         roscpp
         controller_interface
-        legged_controllers
         legged_deployment
 )
 
@@ -41,14 +39,6 @@ target_link_libraries(${PROJECT_NAME}
         )
 
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
-
-# Cmd publish node
-# add_executable(CmdPublisher
-#         src/CmdPublisher.cpp
-#         )
-# target_link_libraries(CmdPublisher
-#         ${catkin_LIBRARIES}
-#         )
 
 add_executable(move_box_node src/move_box.cpp)
 target_link_libraries(move_box_node ${catkin_LIBRARIES})        

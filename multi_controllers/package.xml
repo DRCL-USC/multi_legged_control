@@ -14,8 +14,8 @@
     <build_depend>cmake_clang_tools</build_depend>
     <depend>roscpp</depend>
     <depend>controller_interface</depend>
-    <depend>legged_controllers</depend>
     <depend>loco_manipulation_interface</depend>
+    <depend>unitree_description</depend>
     <depend>legged_deployment</depend>
 
     <export>

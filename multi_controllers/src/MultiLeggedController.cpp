@@ -79,7 +79,7 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   for (const auto& name : leggedInterface_->modelSettings().contactNames3DoF) {
     contactHandles_.push_back(contactInterface->getHandle(name));
   }
-  imuSensorHandle_ = robot_hw->get<hardware_interface::ImuSensorInterface>()->getHandle("unitree_imu");
+  imuSensorHandle_ = robot_hw->get<hardware_interface::ImuSensorInterface>()->getHandle("base_imu");
 
   // State estimation
   setupStateEstimate(taskFile, verbose);

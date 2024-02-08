@@ -3,7 +3,7 @@ windows:
   - layout: tiled
     panes:
       - shell_command:
-        - roslaunch unitree_description gazebo_world.launch
+        - roslaunch custom_description world_only.launch
       - shell_command:
         - sleep 1
         - roslaunch multi_controllers load_controller.launch
