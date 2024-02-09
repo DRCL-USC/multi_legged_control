@@ -6,6 +6,7 @@
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
+#include <legged_estimation/LinearKalmanFilter.h>
 
 
 #include <pluginlib/class_list_macros.hpp>
@@ -82,7 +83,10 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   imuSensorHandle_ = robot_hw->get<hardware_interface::ImuSensorInterface>()->getHandle("base_imu");
 
   // State estimation
-  setupStateEstimate(taskFile, verbose);
+  stateEstimate_ = std::make_shared<KalmanFilterEstimate>(leggedInterface_->getPinocchioInterface(),
+                                                          leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
+  dynamic_cast<KalmanFilterEstimate&>(*stateEstimate_).loadSettings(taskFile, verbose);
+  currentObservation_.time = 0;
 
   // Whole body control
   wbc_ = std::make_shared<WeightedWbc>(leggedInterface_->getPinocchioInterface(), leggedInterface_->getCentroidalModelInfo(),
