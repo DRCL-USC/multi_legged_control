@@ -82,7 +82,7 @@ class ModifiedLeggedRobotVisualizer : public DummyObserver {
                                        const vector_array_t& mpcStateTrajectory, const ModeSchedule& modeSchedule);
 
  private:
-  ModifiedLeggedRobotVisualizer(const LeggedRobotVisualizer&) = delete;
+  ModifiedLeggedRobotVisualizer(const ModifiedLeggedRobotVisualizer&) = delete;
   void publishJointTransforms(ros::Time timeStamp, const vector_t& jointAngles) const;
   void publishBaseTransform(ros::Time timeStamp, const vector_t& basePose);
   void publishCartesianMarkers(ros::Time timeStamp, const contact_flag_t& contactFlags, const std::vector<vector3_t>& feetPositions,

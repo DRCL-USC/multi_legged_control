@@ -6,7 +6,6 @@
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
-#include <multi_legged_controllers/visualization/ModifiedLeggedRobotVisualizer.h>
 
 
 #include <pluginlib/class_list_macros.hpp>
@@ -64,7 +63,7 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   CentroidalModelPinocchioMapping pinocchioMapping(leggedInterface_->getCentroidalModelInfo());
   eeKinematicsPtr_ = std::make_shared<PinocchioEndEffectorKinematics>(leggedInterface_->getPinocchioInterface(), pinocchioMapping,
                                                                       leggedInterface_->modelSettings().contactNames3DoF);
-  robotVisualizer_ = std::make_shared<ModifiedLeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
+  ModifiedRobotVisualizer_ = std::make_shared<ModifiedLeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
                                                              leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
   selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
                                                                          leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));
@@ -94,6 +93,51 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   safetyChecker_ = std::make_shared<SafetyChecker>(leggedInterface_->getCentroidalModelInfo());
 
   return true;
+}
+
+void MultiLeggedController::update(const ros::Time& time, const ros::Duration& period) {
+  // State Estimate
+  updateStateEstimation(time, period);
+
+  // Update the current state of the system
+  mpcMrtInterface_->setCurrentObservation(currentObservation_);
+
+  // Load the latest MPC policy
+  mpcMrtInterface_->updatePolicy();
+
+  // Evaluate the current policy
+  vector_t optimizedState, optimizedInput;
+  size_t plannedMode = 0;  // The mode that is active at the time the policy is evaluated at.
+  mpcMrtInterface_->evaluatePolicy(currentObservation_.time, currentObservation_.state, optimizedState, optimizedInput, plannedMode);
+
+  // Whole body control
+  currentObservation_.input = optimizedInput;
+
+  wbcTimer_.startTimer();
+  vector_t x = wbc_->update(optimizedState, optimizedInput, measuredRbdState_, plannedMode, period.toSec());
+  wbcTimer_.endTimer();
+
+  vector_t torque = x.tail(12);
+
+  vector_t posDes = centroidal_model::getJointAngles(optimizedState, leggedInterface_->getCentroidalModelInfo());
+  vector_t velDes = centroidal_model::getJointVelocities(optimizedInput, leggedInterface_->getCentroidalModelInfo());
+
+  // Safety check, if failed, stop the controller
+  if (!safetyChecker_->check(currentObservation_, optimizedState, optimizedInput)) {
+    ROS_ERROR_STREAM("[Legged Controller] Safety check failed, stopping the controller.");
+    stopRequest(time);
+  }
+
+  for (size_t j = 0; j < leggedInterface_->getCentroidalModelInfo().actuatedDofNum; ++j) {
+    hybridJointHandles_[j].setCommand(posDes(j), velDes(j), 0, 3, torque(j));
+  }
+
+  // Visualization
+  ModifiedRobotVisualizer_->update(currentObservation_, mpcMrtInterface_->getPolicy(), mpcMrtInterface_->getCommand());
+  selfCollisionVisualization_->update(currentObservation_);
+
+  // Publish the observation. Only needed for the command interface
+  observationPublisher_.publish(ros_msg_conversions::createObservationMsg(currentObservation_));
 }
 
 }  // namespace legged

@@ -32,7 +32,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
         src/MultiLeggedController.cpp
-        src/visualization/LeggedRobotVisualizer.cpp
+        src/visualization/ModifiedLeggedRobotVisualizer.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}
