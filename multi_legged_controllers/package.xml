@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-    <name>multi_controllers</name>
+    <name>multi_legged_controllers</name>
     <version>0.0.0</version>
     <description>legged_perceptive_controllers</description>
     <maintainer email="somboles@usc.edu">Mohsen Sombolestan</maintainer>
@@ -19,6 +19,6 @@
     <depend>legged_deployment</depend>
 
     <export>
-        <controller_interface plugin="${prefix}/multi_controllers_plugins.xml"/>
+        <controller_interface plugin="${prefix}/multi_legged_controllers_plugins.xml"/>
     </export>
 </package>

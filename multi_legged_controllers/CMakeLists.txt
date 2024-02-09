@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(multi_controllers)
+project(multi_legged_controllers)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -32,6 +32,7 @@ include_directories(
 
 add_library(${PROJECT_NAME}
         src/MultiLeggedController.cpp
+        src/visualization/LeggedRobotVisualizer.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}

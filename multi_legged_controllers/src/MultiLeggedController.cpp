@@ -1,11 +1,12 @@
 
-#include "../include/MultiLeggedController.h"
+#include "../include/multi_legged_controllers/MultiLeggedController.h"
 #include <legged_wbc/WeightedWbc.h>
 #include <ocs2_sqp/SqpMpc.h>
 #include <ocs2_legged_robot_ros/gait/GaitReceiver.h>
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
+#include <multi_legged_controllers/visualization/ModifiedLeggedRobotVisualizer.h>
 
 
 #include <pluginlib/class_list_macros.hpp>
@@ -63,7 +64,7 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   CentroidalModelPinocchioMapping pinocchioMapping(leggedInterface_->getCentroidalModelInfo());
   eeKinematicsPtr_ = std::make_shared<PinocchioEndEffectorKinematics>(leggedInterface_->getPinocchioInterface(), pinocchioMapping,
                                                                       leggedInterface_->modelSettings().contactNames3DoF);
-  robotVisualizer_ = std::make_shared<LeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
+  robotVisualizer_ = std::make_shared<ModifiedLeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
                                                              leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
   selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
                                                                          leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));

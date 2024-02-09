@@ -9,8 +9,8 @@ namespace legged
 
     class MultiLeggedController : public legged::LeggedController
     {
-    protected:
         bool init(hardware_interface::RobotHW *robot_hw, ros::NodeHandle &controller_nh) override;
+        std::shared_ptr<ModifiedLeggedRobotVisualizer> robotVisualizer_;
     };
 
 } // namespace legged

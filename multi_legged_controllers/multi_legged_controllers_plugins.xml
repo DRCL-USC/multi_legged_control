@@ -1,4 +1,4 @@
-<library path="lib/libmulti_controllers">
+<library path="lib/libmulti_legged_controllers">
 
     <class name="legged/MultiLeggedController"
            type="legged::MultiLeggedController"
