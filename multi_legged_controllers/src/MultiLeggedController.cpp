@@ -1,5 +1,5 @@
 
-#include "../include/multi_legged_controllers/MultiLeggedController.h"
+#include "multi_legged_controllers/MultiLeggedController.h"
 #include <legged_wbc/WeightedWbc.h>
 #include <ocs2_sqp/SqpMpc.h>
 #include <ocs2_legged_robot_ros/gait/GaitReceiver.h>
