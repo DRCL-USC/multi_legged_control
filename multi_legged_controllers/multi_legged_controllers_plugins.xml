@@ -7,4 +7,11 @@
         </description>
     </class>
 
+    <class name="legged/MultiPerceptiveController"
+           type="legged::MultiPerceptiveController"
+           base_class_type="controller_interface::ControllerBase">
+        <description>
+        </description>
+    </class>
+
 </library>

@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 
 <launch>
-      <arg name="robot_name" default="$(env ROBOT_NAME)"/>  
+      <arg name="robot_name" default="$(env ROBOT_NAME)"/>
+      <arg name="controller" default="multi_perceptive_controller"/>   
             
       <group ns="$(arg robot_name)">
             <node name="service" pkg="legged_deployment" type="controller_client_node"
-            output="screen" args="multi_legged_controller start" /> 
+            output="screen" args="$(arg controller) start" /> 
 
             <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py" 
                   output="screen" />      

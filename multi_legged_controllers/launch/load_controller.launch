@@ -31,7 +31,8 @@
             <node name="controller_loader" pkg="controller_manager" type="controller_manager"
                   output="screen"
                   args="load
-                  controllers/multi_legged_controller" />
+                  controllers/multi_legged_controller
+                  controllers/multi_perceptive_controller" />
 
             <node pkg="legged_deployment" type="gait_command_node" name="gait_command_node"
                   output="screen" />

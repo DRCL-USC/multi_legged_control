@@ -1,3 +1,5 @@
 controllers:
   multi_legged_controller:
     type: legged/MultiLeggedController
+  multi_perceptive_controller:
+    type: legged/MultiPerceptiveController  
