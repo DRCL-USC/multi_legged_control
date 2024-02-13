@@ -5,9 +5,6 @@
   <arg name="rviz" default="false" />
 
   <group ns="$(arg ns)">
-
-    <remap from="/tf" to="tf" />
-            <remap from="/tf_static" to="tf_static" />
     <!-- rviz -->
     <group if="$(arg rviz)">
       <include file="$(find legged_deployment)/launch/rviz.launch">
