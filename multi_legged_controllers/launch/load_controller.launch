@@ -20,7 +20,6 @@
             <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
                   args="-z 0.5 -x $(arg x) -y $(arg y) -param legged_robot_description -urdf -model $(arg ns)" output="screen" />
 
-            <param name="robot_description" textfile="/tmp/legged_control/$(arg robot_type).urdf" />
             <param name="urdfFile" value="/tmp/legged_control/$(arg robot_type).urdf" />
             <param name="taskFile" value="$(find legged_controllers)/config/$(arg robot_type)/task.info" />
             <param name="referenceFile" value="$(find legged_controllers)/config/$(arg robot_type)/reference.info" />

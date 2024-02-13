@@ -1,0 +1,43 @@
+<launch>
+  <arg name="manager" default="point_cloud_manager" />
+  <arg name="robot_type" default="$(env ROBOT_TYPE)" doc="Robot type: [a1, aliengo, go1, laikago]" />
+  <arg name="ns" default="$(env ROBOT_NAME)"/> 
+  <arg name="rviz" default="false" />
+
+  <group ns="$(arg ns)">
+
+    <remap from="/tf" to="tf" />
+            <remap from="/tf_static" to="tf_static" />
+    <!-- rviz -->
+    <group if="$(arg rviz)">
+      <include file="$(find legged_deployment)/launch/rviz.launch">
+        <arg name="robot_type" value="$(arg robot_type)" />
+      </include>
+    </group>
+
+    <node pkg="elevation_mapping_demos" type="tf_to_pose_publisher.py" name="aliengo_pose_publisher">
+      <param name="from_frame" type="string" value="odom" />
+      <param name="to_frame" type="string" value="base" />
+    </node>
+
+    <!-- Elevation mapping node -->
+    <remap from="/front_camera/depth/points" to="front_camera/depth/points" />
+    <remap from="/base_pose" to="base_pose" />
+    <remap from="/elevation_mapping/elevation_map_raw" to="elevation_mapping/elevation_map_raw" />
+
+    <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+      <rosparam command="load"
+        file="$(find legged_deployment)/config/elevation_mapping.yaml" />
+      <rosparam command="load"
+        file="$(find elevation_mapping_demos)/config/postprocessing/postprocessor_pipeline.yaml" />
+    </node>
+    
+    <include file="$(find convex_plane_decomposition_ros)/launch/convex_plane_decomposition.launch">
+      <arg name="parameter_file"
+        value="$(find legged_perceptive_controllers)/config/convex_plane_decomposition.yaml" />
+    </include>    
+
+  </group>
+
+
+</launch>

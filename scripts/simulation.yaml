@@ -3,12 +3,15 @@ windows:
   - layout: tiled
     panes:
       - shell_command:
-        - roslaunch custom_description world_only.launch
+        - roslaunch custom_description world_only.launch wname:=stepping_stone
       - shell_command:
         - sleep 1
         - roslaunch multi_legged_controllers load_controller.launch
       - shell_command:
-        - sleep 4
+        - sleep 3
+        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=true
+      - shell_command:
+        - sleep 5
         - roslaunch multi_legged_controllers service_call.launch
     shell_command_before:
       - cd ~/ocs2_ws/
