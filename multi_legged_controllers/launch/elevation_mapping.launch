@@ -12,14 +12,9 @@
       </include>
     </group>
 
-    <node pkg="elevation_mapping_demos" type="tf_to_pose_publisher.py" name="aliengo_pose_publisher">
-      <param name="from_frame" type="string" value="odom" />
-      <param name="to_frame" type="string" value="base" />
-    </node>
-
     <!-- Elevation mapping node -->
     <remap from="/front_camera/depth/points" to="front_camera/depth/points" />
-    <remap from="/base_pose" to="base_pose" />
+    <remap from="/pose" to="pose" />
     <remap from="/elevation_mapping/elevation_map_raw" to="elevation_mapping/elevation_map_raw" />
 
     <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
