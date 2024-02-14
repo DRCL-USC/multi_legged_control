@@ -2,6 +2,7 @@
 #include <pinocchio/fwd.hpp>
 
 #include "multi_legged_controllers/MultiLeggedController.h"
+#include "multi_legged_controllers/MultiLeggedInterface.h"
 #include <legged_wbc/WeightedWbc.h>
 #include <ocs2_sqp/SqpMpc.h>
 #include <ocs2_legged_robot_ros/gait/GaitReceiver.h>
@@ -43,7 +44,9 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   bool verbose = false;
   loadData::loadCppDataType(taskFile, "legged_robot_interface.verbose", verbose);
 
-  setupLeggedInterface(taskFile, urdfFile, referenceFile, verbose);
+  // setup the legged interface
+  leggedInterface_ = std::make_shared<MultiLeggedInterface>(ns, taskFile, urdfFile, referenceFile);
+  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
 
   // Setup the MPC
   setupMPCwithNh(nh);
@@ -62,8 +65,8 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
 
   // Hardware interface
   auto* hybridJointInterface = robot_hw->get<HybridJointInterface>();
-  std::vector<std::string> joint_names{"LF_HAA", "LF_HFE", "LF_KFE", "LH_HAA", "LH_HFE", "LH_KFE",
-                                       "RF_HAA", "RF_HFE", "RF_KFE", "RH_HAA", "RH_HFE", "RH_KFE"};
+  std::vector<std::string> joint_names{ ns + "_LF_HAA", ns + "_LF_HFE", ns + "_LF_KFE", ns + "_LH_HAA", ns + "_LH_HFE", ns + "_LH_KFE",
+                                        ns + "_RF_HAA", ns + "_RF_HFE", ns + "_RF_KFE", ns + "_RH_HAA", ns + "_RH_HFE", ns + "_RH_KFE"};
   for (const auto& joint_name : joint_names) {
     hybridJointHandles_.push_back(hybridJointInterface->getHandle(joint_name));
   }
