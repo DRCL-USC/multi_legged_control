@@ -1,15 +1,16 @@
 <launch>
-  <arg name="manager" default="point_cloud_manager" />
   <arg name="robot_type" default="$(env ROBOT_TYPE)" doc="Robot type: [a1, aliengo, go1, laikago]" />
   <arg name="ns" default="$(env ROBOT_NAME)"/> 
   <arg name="rviz" default="false" />
+  <arg name="rviz_config" default="$(find legged_deployment)/config/rviz.rviz" />
+  <arg name="x" default="0" />
+  <arg name="y" default="0" />
+  <arg name="z" default="0" />
 
   <group ns="$(arg ns)">
     <!-- rviz -->
     <group if="$(arg rviz)">
-      <include file="$(find legged_deployment)/launch/rviz.launch">
-        <arg name="robot_type" value="$(arg robot_type)" />
-      </include>
+      <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" output="screen" />
     </group>
 
     <!-- Elevation mapping node -->
@@ -20,14 +21,27 @@
     <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
       <rosparam command="load"
         file="$(find legged_deployment)/config/elevation_mapping.yaml" />
+
+      <rosparam param="map_frame_id" subst_value="True">$(arg ns)_odom</rosparam>  
+      <rosparam param="robot_base_frame_id" subst_value="True">$(arg ns)_base</rosparam>  
+      <rosparam param="track_point_frame_id" subst_value="True">$(arg ns)_base</rosparam>  
+      <rosparam param="target_frame_init_submap" subst_value="True">$(arg ns)_base</rosparam> 
+
       <rosparam command="load"
         file="$(find elevation_mapping_demos)/config/postprocessing/postprocessor_pipeline.yaml" />
     </node>
-    
-    <include file="$(find convex_plane_decomposition_ros)/launch/convex_plane_decomposition.launch">
-      <arg name="parameter_file"
-        value="$(find legged_perceptive_controllers)/config/convex_plane_decomposition.yaml" />
-    </include>    
+
+    <node pkg="convex_plane_decomposition_ros" type="convex_plane_decomposition_ros_node"
+          name="convex_plane_decomposition_ros"
+          output="screen" launch-prefix="">
+        <rosparam file="$(find legged_perceptive_controllers)/config/convex_plane_decomposition.yaml" command="load"/>
+        <rosparam file="$(find convex_plane_decomposition_ros)/config/node.yaml" command="load"/>
+
+        <rosparam param="target_frame_id" subst_value="True">$(arg ns)_odom</rosparam>
+    </node>
+
+    <node pkg="tf2_ros" type="static_transform_publisher" name="odom_tf_publisher"
+          args="x y z 0 0 0 1 map $(arg ns)_odom"/>    
 
   </group>
 

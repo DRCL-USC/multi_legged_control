@@ -62,7 +62,7 @@ class ModifiedLeggedRobotVisualizer : public DummyObserver {
    * @param n
    * @param maxUpdateFrequency : maximum publish frequency measured in MPC time.
    */
-  ModifiedLeggedRobotVisualizer(PinocchioInterface pinocchioInterface, CentroidalModelInfo centroidalModelInfo,
+  ModifiedLeggedRobotVisualizer(const std::string ns, PinocchioInterface pinocchioInterface, CentroidalModelInfo centroidalModelInfo,
                         const PinocchioEndEffectorKinematics& endEffectorKinematics, ros::NodeHandle& nodeHandle,
                         scalar_t maxUpdateFrequency = 100.0);
 
@@ -104,6 +104,7 @@ class ModifiedLeggedRobotVisualizer : public DummyObserver {
 
   scalar_t lastTime_;
   scalar_t minPublishTimeDifference_;
+  const std::string ns_;
 };
 
 }  // namespace legged_robot

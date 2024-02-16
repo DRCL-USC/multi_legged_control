@@ -57,14 +57,15 @@ namespace legged_robot {
 /******************************************************************************************************/
 /******************************************************************************************************/
 /******************************************************************************************************/
-ModifiedLeggedRobotVisualizer::ModifiedLeggedRobotVisualizer(PinocchioInterface pinocchioInterface, CentroidalModelInfo centroidalModelInfo,
+ModifiedLeggedRobotVisualizer::ModifiedLeggedRobotVisualizer(const std::string ns, PinocchioInterface pinocchioInterface, CentroidalModelInfo centroidalModelInfo,
                                              const PinocchioEndEffectorKinematics& endEffectorKinematics, ros::NodeHandle& nodeHandle,
                                              scalar_t maxUpdateFrequency)
     : pinocchioInterface_(std::move(pinocchioInterface)),
       centroidalModelInfo_(std::move(centroidalModelInfo)),
       endEffectorKinematicsPtr_(endEffectorKinematics.clone()),
       lastTime_(std::numeric_limits<scalar_t>::lowest()),
-      minPublishTimeDifference_(1.0 / maxUpdateFrequency) {
+      minPublishTimeDifference_(1.0 / maxUpdateFrequency),
+      ns_(ns) {
   endEffectorKinematicsPtr_->setPinocchioInterface(pinocchioInterface_);
   launchVisualizerNode(nodeHandle);
 };
@@ -140,10 +141,10 @@ void ModifiedLeggedRobotVisualizer::publishObservation(ros::Time timeStamp, cons
 /******************************************************************************************************/
 void ModifiedLeggedRobotVisualizer::publishJointTransforms(ros::Time timeStamp, const vector_t& jointAngles) const {
   if (robotStatePublisherPtr_ != nullptr) {
-    std::map<std::string, scalar_t> jointPositions{{"LF_HAA", jointAngles[0]}, {"LF_HFE", jointAngles[1]},  {"LF_KFE", jointAngles[2]},
-                                                   {"LH_HAA", jointAngles[3]}, {"LH_HFE", jointAngles[4]},  {"LH_KFE", jointAngles[5]},
-                                                   {"RF_HAA", jointAngles[6]}, {"RF_HFE", jointAngles[7]},  {"RF_KFE", jointAngles[8]},
-                                                   {"RH_HAA", jointAngles[9]}, {"RH_HFE", jointAngles[10]}, {"RH_KFE", jointAngles[11]}};
+    std::map<std::string, scalar_t> jointPositions{{ns_ + "_LF_HAA", jointAngles[0]}, {ns_ + "_LF_HFE", jointAngles[1]},  {ns_ + "_LF_KFE", jointAngles[2]},
+                                                   {ns_ + "_LH_HAA", jointAngles[3]}, {ns_ + "_LH_HFE", jointAngles[4]},  {ns_ + "_LH_KFE", jointAngles[5]},
+                                                   {ns_ + "_RF_HAA", jointAngles[6]}, {ns_ + "_RF_HFE", jointAngles[7]},  {ns_ + "_RF_KFE", jointAngles[8]},
+                                                   {ns_ + "_RH_HAA", jointAngles[9]}, {ns_ + "_RH_HFE", jointAngles[10]}, {ns_ + "_RH_KFE", jointAngles[11]}};
     robotStatePublisherPtr_->publishTransforms(jointPositions, timeStamp);
   }
 }
@@ -154,8 +155,8 @@ void ModifiedLeggedRobotVisualizer::publishJointTransforms(ros::Time timeStamp, 
 void ModifiedLeggedRobotVisualizer::publishBaseTransform(ros::Time timeStamp, const vector_t& basePose) {
   if (robotStatePublisherPtr_ != nullptr) {
     geometry_msgs::TransformStamped baseToWorldTransform;
-    baseToWorldTransform.header = getHeaderMsg(frameId_, timeStamp);
-    baseToWorldTransform.child_frame_id = "base";
+    baseToWorldTransform.header = getHeaderMsg(ns_ + "_" + frameId_, timeStamp);
+    baseToWorldTransform.child_frame_id = ns_ + "_base";
 
     const Eigen::Quaternion<scalar_t> q_world_base = getQuaternionFromEulerAnglesZyx(vector3_t(basePose.tail<3>()));
     baseToWorldTransform.transform.rotation = getOrientationMsg(q_world_base);
@@ -204,7 +205,7 @@ void ModifiedLeggedRobotVisualizer::publishCartesianMarkers(ros::Time timeStamp,
       getSupportPolygonMarker(feetPositions.begin(), feetPositions.end(), contactFlags.begin(), Color::black, supportPolygonLineWidth_));
 
   // Give markers an id and a frame
-  assignHeader(markerArray.markers.begin(), markerArray.markers.end(), getHeaderMsg(frameId_, timeStamp));
+  assignHeader(markerArray.markers.begin(), markerArray.markers.end(), getHeaderMsg(ns_ + "_" + frameId_, timeStamp));
   assignIncreasingId(markerArray.markers.begin(), markerArray.markers.end());
 
   // Publish cartesian markers (minus the CoM Pose)
@@ -261,14 +262,14 @@ void ModifiedLeggedRobotVisualizer::publishDesiredTrajectory(ros::Time timeStamp
 
   // Headers
   auto comLineMsg = getLineMsg(std::move(desiredBasePositionMsg), Color::green, trajectoryLineWidth_);
-  comLineMsg.header = getHeaderMsg(frameId_, timeStamp);
+  comLineMsg.header = getHeaderMsg(ns_ + "_" + frameId_, timeStamp);
   comLineMsg.id = 0;
 
   // Publish
   costDesiredBasePositionPublisher_.publish(comLineMsg);
   for (size_t i = 0; i < centroidalModelInfo_.numThreeDofContacts; i++) {
     auto footLineMsg = getLineMsg(std::move(desiredFeetPositionMsgs[i]), feetColorMap_[i], trajectoryLineWidth_);
-    footLineMsg.header = getHeaderMsg(frameId_, timeStamp);
+    footLineMsg.header = getHeaderMsg(ns_ + "_" + frameId_, timeStamp);
     footLineMsg.id = 0;
     costDesiredFeetPositionPublishers_[i].publish(footLineMsg);
   }
@@ -359,7 +360,7 @@ void ModifiedLeggedRobotVisualizer::publishOptimizedStateTrajectory(ros::Time ti
   markerArray.markers.push_back(std::move(sphereList));
 
   // Add headers and Id
-  assignHeader(markerArray.markers.begin(), markerArray.markers.end(), getHeaderMsg(frameId_, timeStamp));
+  assignHeader(markerArray.markers.begin(), markerArray.markers.end(), getHeaderMsg(ns_ + "_" + frameId_, timeStamp));
   assignIncreasingId(markerArray.markers.begin(), markerArray.markers.end());
 
   stateOptimizedPublisher_.publish(markerArray);

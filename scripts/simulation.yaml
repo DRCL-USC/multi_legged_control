@@ -8,7 +8,7 @@ windows:
         - sleep 1
         - roslaunch multi_legged_controllers load_controller.launch
       - shell_command:
-        - sleep 3
+        - sleep 7
         - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=true
       - shell_command:
         - sleep 5

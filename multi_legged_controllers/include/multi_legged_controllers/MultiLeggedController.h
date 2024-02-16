@@ -1,8 +1,9 @@
 
 #include <legged_controllers/LeggedController.h>
-#include <legged_perceptive_controllers/visualization/FootPlacementVisualization.h>
-#include <legged_perceptive_controllers/visualization/SphereVisualization.h>
+#include <multi_legged_controllers/visualization/FootPlacementVisualization.h>
+#include <multi_legged_controllers/visualization/SphereVisualization.h>
 #include <multi_legged_controllers/visualization/ModifiedLeggedRobotVisualizer.h>
+#include <multi_legged_controllers/legged_estimation/ModifiedStateEstimateBase.h>
 
 namespace legged
 {
@@ -16,11 +17,15 @@ namespace legged
         void update(const ros::Time &time, const ros::Duration &period) override;
 
     protected:
-        virtual void setupMPCwithNh(ros::NodeHandle nh);
+        void updateStateEstimation(const ros::Time &time, const ros::Duration &period) override;
+        virtual void setupLeggedInterfaceWithNs(const std::string ns, const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
+                                  bool verbose);
+        virtual void setupMPCwithNh(const std::string ns);
 
     private:
         benchmark::RepeatedTimer wbcTimer_;
         std::shared_ptr<ModifiedLeggedRobotVisualizer> ModifiedRobotVisualizer_;
+        std::shared_ptr<ModifiedStateEstimateBase> stateEstimate_;
     };
 
     class MultiPerceptiveController : public MultiLeggedController
@@ -29,9 +34,9 @@ namespace legged
         void update(const ros::Time &time, const ros::Duration &period) override;
     
     protected:
-        void setupLeggedInterface(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
+        void setupLeggedInterfaceWithNs(const std::string ns, const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile,
                                   bool verbose) override;
-        void setupMPCwithNh(ros::NodeHandle nh) override;
+        void setupMPCwithNh(const std::string ns) override;
 
     private:
         std::shared_ptr<FootPlacementVisualization> footPlacementVisualizationPtr_;

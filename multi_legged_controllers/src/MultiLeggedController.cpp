@@ -9,12 +9,12 @@
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
-#include <legged_estimation/LinearKalmanFilter.h>
+#include <multi_legged_controllers/legged_estimation/ModifiedLinearKalmanFilter.h>
 #include "legged_perceptive_controllers/synchronized_module/PlanarTerrainReceiver.h"
 #include "legged_perceptive_interface/PerceptiveLeggedInterface.h"
 #include "legged_perceptive_interface/PerceptiveLeggedReferenceManager.h"
 
-
+#include <angles/angles.h>
 #include <pluginlib/class_list_macros.hpp>
 
 namespace legged {
@@ -45,11 +45,10 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   loadData::loadCppDataType(taskFile, "legged_robot_interface.verbose", verbose);
 
   // setup the legged interface
-  leggedInterface_ = std::make_shared<MultiLeggedInterface>(ns, taskFile, urdfFile, referenceFile);
-  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+  setupLeggedInterfaceWithNs(ns, taskFile, urdfFile, referenceFile, verbose);
 
   // Setup the MPC
-  setupMPCwithNh(nh);
+  setupMPCwithNh(ns);
 
  // Setup MRT
   setupMrt();
@@ -58,10 +57,10 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   CentroidalModelPinocchioMapping pinocchioMapping(leggedInterface_->getCentroidalModelInfo());
   eeKinematicsPtr_ = std::make_shared<PinocchioEndEffectorKinematics>(leggedInterface_->getPinocchioInterface(), pinocchioMapping,
                                                                       leggedInterface_->modelSettings().contactNames3DoF);
-  ModifiedRobotVisualizer_ = std::make_shared<ModifiedLeggedRobotVisualizer>(leggedInterface_->getPinocchioInterface(),
+  ModifiedRobotVisualizer_ = std::make_shared<ModifiedLeggedRobotVisualizer>(ns, leggedInterface_->getPinocchioInterface(),
                                                              leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
-  selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
-                                                                         leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));
+  // selfCollisionVisualization_.reset(new LeggedSelfCollisionVisualization(leggedInterface_->getPinocchioInterface(),
+  //                                                                        leggedInterface_->getGeometryInterface(), pinocchioMapping, nh));
 
   // Hardware interface
   auto* hybridJointInterface = robot_hw->get<HybridJointInterface>();
@@ -77,9 +76,9 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   imuSensorHandle_ = robot_hw->get<hardware_interface::ImuSensorInterface>()->getHandle("base_imu");
 
   // State estimation
-  stateEstimate_ = std::make_shared<KalmanFilterEstimate>(leggedInterface_->getPinocchioInterface(),
-                                                          leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, nh);
-  dynamic_cast<KalmanFilterEstimate&>(*stateEstimate_).loadSettings(taskFile, verbose);
+  stateEstimate_ = std::make_shared<ModifiedKalmanFilterEstimate>(leggedInterface_->getPinocchioInterface(),
+                                                          leggedInterface_->getCentroidalModelInfo(), *eeKinematicsPtr_, ns);
+  dynamic_cast<ModifiedKalmanFilterEstimate&>(*stateEstimate_).loadSettings(taskFile, verbose);
   currentObservation_.time = 0;
 
   // Whole body control
@@ -93,7 +92,14 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   return true;
 }
 
-void MultiLeggedController::setupMPCwithNh(ros::NodeHandle nh) {
+void MultiLeggedController::setupLeggedInterfaceWithNs(const std::string ns, const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
+                                                bool verbose) {
+  leggedInterface_ = std::make_shared<MultiLeggedInterface>(ns, taskFile, urdfFile, referenceFile, verbose);
+  leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
+}
+
+void MultiLeggedController::setupMPCwithNh(const std::string ns) {
+  ros::NodeHandle nh(ns);
   mpc_ = std::make_shared<SqpMpc>(leggedInterface_->mpcSettings(), leggedInterface_->sqpSettings(),
                                   leggedInterface_->getOptimalControlProblem(), leggedInterface_->getInitializer());
   rbdConversions_ = std::make_shared<CentroidalModelRbdConversions>(leggedInterface_->getPinocchioInterface(),
@@ -150,26 +156,66 @@ void MultiLeggedController::update(const ros::Time& time, const ros::Duration& p
 
   // Visualization
   ModifiedRobotVisualizer_->update(currentObservation_, mpcMrtInterface_->getPolicy(), mpcMrtInterface_->getCommand());
-  selfCollisionVisualization_->update(currentObservation_);
+  // selfCollisionVisualization_->update(currentObservation_);
 
   // Publish the observation. Only needed for the command interface
   observationPublisher_.publish(ros_msg_conversions::createObservationMsg(currentObservation_));
 }
 
-void MultiPerceptiveController::setupLeggedInterface(const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
+void MultiLeggedController::updateStateEstimation(const ros::Time& time, const ros::Duration& period) {
+  vector_t jointPos(hybridJointHandles_.size()), jointVel(hybridJointHandles_.size());
+  contact_flag_t contacts;
+  Eigen::Quaternion<scalar_t> quat;
+  contact_flag_t contactFlag;
+  vector3_t angularVel, linearAccel;
+  matrix3_t orientationCovariance, angularVelCovariance, linearAccelCovariance;
+
+  for (size_t i = 0; i < hybridJointHandles_.size(); ++i) {
+    jointPos(i) = hybridJointHandles_[i].getPosition();
+    jointVel(i) = hybridJointHandles_[i].getVelocity();
+  }
+  for (size_t i = 0; i < contacts.size(); ++i) {
+    contactFlag[i] = contactHandles_[i].isContact();
+  }
+  for (size_t i = 0; i < 4; ++i) {
+    quat.coeffs()(i) = imuSensorHandle_.getOrientation()[i];
+  }
+  for (size_t i = 0; i < 3; ++i) {
+    angularVel(i) = imuSensorHandle_.getAngularVelocity()[i];
+    linearAccel(i) = imuSensorHandle_.getLinearAcceleration()[i];
+  }
+  for (size_t i = 0; i < 9; ++i) {
+    orientationCovariance(i) = imuSensorHandle_.getOrientationCovariance()[i];
+    angularVelCovariance(i) = imuSensorHandle_.getAngularVelocityCovariance()[i];
+    linearAccelCovariance(i) = imuSensorHandle_.getLinearAccelerationCovariance()[i];
+  }
+
+  stateEstimate_->updateJointStates(jointPos, jointVel);
+  stateEstimate_->updateContact(contactFlag);
+  stateEstimate_->updateImu(quat, angularVel, linearAccel, orientationCovariance, angularVelCovariance, linearAccelCovariance);
+  measuredRbdState_ = stateEstimate_->update(time, period);
+  currentObservation_.time += period.toSec();
+  scalar_t yawLast = currentObservation_.state(9);
+  currentObservation_.state = rbdConversions_->computeCentroidalStateFromRbdModel(measuredRbdState_);
+  currentObservation_.state(9) = yawLast + angles::shortest_angular_distance(yawLast, currentObservation_.state(9));
+  currentObservation_.mode = stateEstimate_->getMode();
+}
+
+void MultiPerceptiveController::setupLeggedInterfaceWithNs(const std::string ns, const std::string& taskFile, const std::string& urdfFile, const std::string& referenceFile,
                                                 bool verbose) {
-  leggedInterface_ = std::make_shared<PerceptiveLeggedInterface>(taskFile, urdfFile, referenceFile, verbose);
+  leggedInterface_ = std::make_shared<MultiPerceptiveLeggedInterface>(ns, taskFile, urdfFile, referenceFile, verbose);
   leggedInterface_->setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
 }
 
-void MultiPerceptiveController::setupMPCwithNh(ros::NodeHandle nh) {
-  MultiLeggedController::setupMPCwithNh(nh);
+void MultiPerceptiveController::setupMPCwithNh(const std::string ns) {
+  MultiLeggedController::setupMPCwithNh(ns);
+  ros::NodeHandle nh(ns);
 
-  footPlacementVisualizationPtr_ = std::make_shared<FootPlacementVisualization>(
+  footPlacementVisualizationPtr_ = std::make_shared<FootPlacementVisualization>(ns,
       *dynamic_cast<PerceptiveLeggedReferenceManager&>(*leggedInterface_->getReferenceManagerPtr()).getConvexRegionSelectorPtr(),
       leggedInterface_->getCentroidalModelInfo().numThreeDofContacts, nh);
 
-  sphereVisualizationPtr_ = std::make_shared<SphereVisualization>(
+  sphereVisualizationPtr_ = std::make_shared<SphereVisualization>(ns,
       leggedInterface_->getPinocchioInterface(), leggedInterface_->getCentroidalModelInfo(),
       *dynamic_cast<PerceptiveLeggedInterface&>(*leggedInterface_).getPinocchioSphereInterfacePtr(), nh);
 

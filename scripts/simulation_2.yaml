@@ -5,6 +5,9 @@ windows:
       - shell_command:
         - roslaunch multi_legged_controllers load_controller.launch y:=1
       - shell_command:
+        - sleep 5
+        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=true y:=1
+      - shell_command:
         - sleep 3
         - roslaunch multi_legged_controllers service_call.launch
     shell_command_before:
