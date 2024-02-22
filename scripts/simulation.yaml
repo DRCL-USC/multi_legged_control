@@ -14,7 +14,7 @@ windows:
         - sleep 8
         - roslaunch multi_legged_controllers service_call.launch
     shell_command_before:
-      - cd ~/ocs2_ws/
+      - cd ~/Projects/ocs2_ws/
       - source devel/setup.bash 
       - export ROBOT_TYPE=aliengo
       - export ROBOT_NAME=alien1
