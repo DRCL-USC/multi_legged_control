@@ -5,11 +5,11 @@ windows:
       - shell_command:
         - roslaunch multi_legged_controllers load_controller.launch y:=1
       - shell_command:
-        - sleep 5
-        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=true y:=0.5
+        - sleep 6
+        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=false y:=0.5
       - shell_command:
-        - sleep 3
-        - roslaunch multi_legged_controllers service_call.launch
+        - sleep 4
+        - roslaunch multi_legged_controllers service_call.launch record_data:=true
     shell_command_before:
       - cd ~/Projects/ocs2_ws/
       - source devel/setup.bash 

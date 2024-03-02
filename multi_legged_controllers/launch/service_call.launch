@@ -7,13 +7,13 @@
 
       <group ns="$(arg robot_name)">
 
-            <group if="$(arg record_data)">
-                  <node name="record_data" pkg="multi_legged_controllers" type="bag_file_node"
-                        output="screen"/>
-            </group>
-
             <node name="service" pkg="legged_deployment" type="controller_client_node"
                   output="screen" args="$(arg controller) start" />
+
+            <group if="$(arg record_data)">
+                  <node name="record_data" pkg="multi_legged_controllers" type="bag_file_node"
+                        output="screen" />
+            </group>
 
             <node name="keyboard_teleop" pkg="teleop_twist_keyboard" type="teleop_twist_keyboard.py"
                   output="screen" />
