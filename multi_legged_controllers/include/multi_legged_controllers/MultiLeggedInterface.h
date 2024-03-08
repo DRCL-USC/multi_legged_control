@@ -71,8 +71,8 @@ namespace legged
         void setupOptimalControlProblem(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile, bool verbose) override
         {
             LeggedInterface::setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
-            // problemPtr_->stateSoftConstraintPtr->add("selfCollisionCorrected",
-            //                                          getSelfCollisionConstraintCorrected(ns_, centroidalModelInfo_, *pinocchioInterfacePtr_, taskFile, "selfCollision", verbose));
+            problemPtr_->stateSoftConstraintPtr->add("selfCollisionCorrected",
+                                                     getSelfCollisionConstraintCorrected(ns_, centroidalModelInfo_, *pinocchioInterfacePtr_, taskFile, "selfCollision", verbose));
         }
 
     private:
@@ -95,8 +95,8 @@ namespace legged
         void setupOptimalControlProblem(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile, bool verbose) override
         {
             PerceptiveLeggedInterface::setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
-            // problemPtr_->stateSoftConstraintPtr->add("selfCollisionCorrected",
-            //                                          getSelfCollisionConstraintCorrected(ns_, centroidalModelInfo_, *pinocchioInterfacePtr_, taskFile, "selfCollision", verbose));
+            problemPtr_->stateSoftConstraintPtr->add("selfCollisionCorrected",
+                                                     getSelfCollisionConstraintCorrected(ns_, centroidalModelInfo_, *pinocchioInterfacePtr_, taskFile, "selfCollision", verbose));
         }
 
     private:
