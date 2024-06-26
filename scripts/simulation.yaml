@@ -3,18 +3,18 @@ windows:
   - layout: tiled
     panes:
       - shell_command:
-        - roslaunch custom_description world_only.launch wname:=stepping_stone
+        - roslaunch custom_description world_with_two_robots.launch wname:=stepping_stone_new
       - shell_command:
-        - sleep 1
+        - sleep 4
         - roslaunch multi_legged_controllers load_controller.launch
       - shell_command:
-        - sleep 3
-        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=true
+        - sleep 10
+        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=false y:=-0.5
       - shell_command:
-        - sleep 5
-        - roslaunch multi_legged_controllers service_call.launch
+        - sleep 8
+        - roslaunch multi_legged_controllers service_call.launch record_data:=false
     shell_command_before:
-      - cd ~/ocs2_ws/
+      - cd ~/Projects/ocs2_ws/
       - source devel/setup.bash 
       - export ROBOT_TYPE=aliengo
       - export ROBOT_NAME=alien1

@@ -5,10 +5,13 @@ windows:
       - shell_command:
         - roslaunch multi_legged_controllers load_controller.launch y:=1
       - shell_command:
-        - sleep 3
-        - roslaunch multi_legged_controllers service_call.launch
+        - sleep 6
+        - roslaunch multi_legged_controllers elevation_mapping.launch rviz:=false y:=0.5
+      - shell_command:
+        - sleep 4
+        - roslaunch multi_legged_controllers service_call.launch record_data:=false
     shell_command_before:
-      - cd ~/ocs2_ws/
+      - cd ~/Projects/ocs2_ws/
       - source devel/setup.bash 
       - export ROBOT_TYPE=aliengo
       - export ROBOT_NAME=alien2

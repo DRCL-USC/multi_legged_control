@@ -33,6 +33,10 @@ include_directories(
 add_library(${PROJECT_NAME}
         src/MultiLeggedController.cpp
         src/visualization/ModifiedLeggedRobotVisualizer.cpp
+        src/visualization/FootPlacementVisualization.cpp
+        src/visualization/SphereVisualization.cpp
+        src/legged_estimation/ModifiedStateEstimateBase.cpp
+        src/legged_estimation/ModifiedLinearKalmanFilter.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}
@@ -41,8 +45,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_compile_options(${PROJECT_NAME} PUBLIC ${OCS2_CXX_FLAGS})
 
-add_executable(move_box_node src/move_box.cpp)
-target_link_libraries(move_box_node ${catkin_LIBRARIES})        
+
+add_executable(bag_file_node src/bagfile_recorder.cpp)
+add_dependencies(bag_file_node ${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(bag_file_node ${PROJECT_NAME} ${catkin_LIBRARIES})
+target_compile_options(bag_file_node PRIVATE ${OCS2_CXX_FLAGS})
 
 #########################
 ###   CLANG TOOLING   ###
@@ -74,3 +81,11 @@ install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
         FILES_MATCHING PATTERN "*.h"
         )
+
+install(PROGRAMS scripts/generate_urdf.sh
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}/scripts
+        )        
+catkin_install_python(PROGRAMS
+        cmdvel_publisher.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+     ) 
