@@ -18,7 +18,7 @@ def publish_once(goal):
     msg = PoseStamped()
     msg.pose.position.x = float(goal)
     msg.pose.position.y = 0
-    msg.pose.position.z = 0
+    msg.pose.position.z = 0.4
 
     # Publish the message once
     pub1.publish(msg)

@@ -1,0 +1,35 @@
+<launch>
+    <arg name="gui" default="true" />
+    <arg name="wname" default="empty_world" />
+    <arg name="robot_type" default="aliengo"/>
+    <arg name="ns_1" default="alien1" />
+    <arg name="ns_2" default="alien2" />
+
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="world_name"
+            value="$(find multi_legged_controllers)/launch/worlds/$(arg wname).world" />
+        <arg name="gui" value="$(arg gui)" />
+    </include>
+
+    <include file="$(find multi_legged_controllers)/launch/load_robot_parameter.launch">
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="ns" value="$(arg ns_1)" />
+    </include>
+
+    <include file="$(find multi_legged_controllers)/launch/load_robot_parameter.launch">
+        <arg name="robot_type" value="$(arg robot_type)" />
+        <arg name="ns" value="$(arg ns_2)" />
+    </include>
+
+    <param name="connected_legged_robot_description"
+        command="$(find xacro)/xacro $(find custom_description)/urdf/connected_robots/connected_robot.xacro 
+        sim:=true robot_type:=$(arg robot_type) ns_1:=$(arg ns_1) ns_2:=$(arg ns_2)" />
+
+    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
+        args="-z 0.5 -x 0 -y 0 -param connected_legged_robot_description -urdf -model combined_model"
+        output="screen" />
+    
+    <param name="rod_only" command="$(find xacro)/xacro $(find custom_description)/urdf/connected_robots/rod_with_joints.xacro 
+    ns_1:=$(arg ns_1) ns_2:=$(arg ns_2)"/>      
+
+</launch>

@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+
+<sdf version="1.5">
+    <world name="default">
+        <!-- Target real time factor is the product of max_step_size and real_time_update_rate -->
+        <!-- Negative real_time_update_rate means that Gazebo will run as fast as possible -->
+        <physics type="ode">
+            <type>world</type>
+            <max_step_size>0.001</max_step_size>
+            <real_time_update_rate>1000</real_time_update_rate>
+            <iters>500</iters>
+        </physics>
+        <!-- A global light source -->
+        <include>
+            <uri>model://sun</uri>
+        </include>
+        <!-- A ground plane -->
+        <include>
+            <uri>model://ground_plane</uri>
+        </include>
+
+        <model name='box'>
+          <static>true</static>
+            <pose frame=''>3 0.0 0.5 0 -0 0</pose>
+            <link name='box'>
+              <visual name='Stairs_1_Visual_0'>
+                <pose frame=''>-0 0 0 0 -0 0</pose>
+                <geometry>
+                  <box>
+                    <size>0.1 0.1 1</size>
+                  </box>
+                </geometry>
+                <material>
+                  <script>
+                    <uri>file://media/materials/scripts/gazebo.material</uri>
+                    <name>Gazebo/Wood</name>
+                  </script>
+                  <ambient>1 1 1 1</ambient>
+                </material>
+              </visual>
+              <collision name='Stairs_1_Collision_0'>
+                <geometry>
+                  <box>
+                    <size>0.1 0.1 1</size>
+                  </box>
+                </geometry>
+                <surface>
+                    <friction>
+                      <ode>
+                        <mu>10</mu>
+                        <mu2>10</mu2>
+                      </ode>
+                    </friction >
+                  </surface>
+                <pose frame=''>0 0 0 0 0 0</pose>
+              </collision>
+            </link>
+          </model>
+
+    </world>
+</sdf>
