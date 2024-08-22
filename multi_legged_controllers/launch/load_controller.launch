@@ -2,9 +2,9 @@
 
 <launch>
       <arg name="robot_type" default="$(env ROBOT_TYPE)" doc="Robot type: [a1, aliengo, go1, laikago]" />
-      <arg name="ns" default="$(env ROBOT_NAME)"/>    
-      <arg name="x" default="0" />
-      <arg name="y" default="0" />
+      <arg name="ns" default="$(env ROBOT_NAME)"/>   
+      <arg name="perceptive" default="false" doc="Enable perceptive controller"/>
+      <arg name="record_data" default="false" />
 
       <group ns="$(arg ns)">
 
@@ -15,17 +15,27 @@
 
             <rosparam file="$(find multi_legged_controllers)/config/controllers.yaml" command="load" />
 
-            <node name="controller_loader" pkg="controller_manager" type="controller_manager"
+            <group if="$(arg perceptive)">
+                  <node pkg="controller_manager" type="spawner" name="controller_spawner" respawn="false"
                   output="screen"
-                  args="load
-                  controllers/multi_legged_controller
-                  controllers/multi_perceptive_controller" />
+                  args="controllers/multi_perceptive_controller" />
+            </group>
+
+            <group unless="$(arg perceptive)">
+                  <node pkg="controller_manager" type="spawner" name="controller_spawner" respawn="false"
+                  output="screen"
+                  args="controllers/multi_legged_controller" />
+            </group>
 
             <node pkg="legged_deployment" type="gait_command_node" name="gait_command_node"
                   output="screen" />
 
             <node pkg="legged_deployment" type="CmdPublisher" name="CmdPublisher"
                   output="screen"/>
+
+            <group if="$(arg record_data)">
+                  <node name="record_data" pkg="multi_legged_controllers" type="bag_file_node" output="screen" />
+            </group>      
        </group>     
 
 

@@ -86,6 +86,10 @@ install(PROGRAMS scripts/generate_urdf.sh
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}/scripts
         )        
 catkin_install_python(PROGRAMS
-        cmdvel_publisher.py
+        src/cmdvel_publisher.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
-     ) 
+        ) 
+catkin_install_python(PROGRAMS
+        src/mode_publisher.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )      
