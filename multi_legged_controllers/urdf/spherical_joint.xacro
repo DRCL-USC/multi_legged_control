@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:macro name="ball_joint" params="name parent child *origin">
+
+    <joint name="${name}_joint" type="continuous">
+      <xacro:insert_block name="origin" />
+      <parent link="${parent}" />
+      <child link="${name}_junta1" />
+      <axis xyz="0 0 1" />
+    </joint>
+
+    <link name="${name}_junta1">
+      <inertial>
+        <mass value="0.025" />
+        <inertia ixx="5.8083e-4" ixy="0" ixz="0" iyy="3.0833e-5" iyz="0" izz="5.9083e-4" />
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint2" type="continuous">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <parent link="${name}_junta1" />
+      <child link="${name}_junta2" />
+      <axis xyz="1 0 0" />
+    </joint>
+
+    <link name="${name}_junta2">
+      <inertial>
+        <mass value="0.025" />
+        <inertia ixx="5.8083e-4" ixy="0" ixz="0" iyy="3.0833e-5" iyz="0" izz="5.9083e-4" />
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint3" type="continuous">
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <parent link="${name}_junta2" />
+      <child link="${name}_junta3" />
+      <axis xyz="0 1 0" />
+    </joint>
+
+    <link name="${name}_junta3">
+      <inertial>
+        <mass value="0.025" />
+        <inertia ixx="5.8083e-4" ixy="0" ixz="0" iyy="3.0833e-5" iyz="0" izz="5.9083e-4" />
+      </inertial>
+    </link>
+
+    <joint name="${name}_jointfixed" type="fixed">
+      <origin rpy="0 0 0" xyz="0 0 -0.1" />
+      <parent link="${name}_junta3" />
+      <child link="${child}" />
+    </joint>
+  </xacro:macro>
+
+</robot>

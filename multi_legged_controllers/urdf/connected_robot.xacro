@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="connected_robot">
+    <xacro:arg name="sim" default="false" />
+    <xacro:arg name="robot_type" default="aliengo" />
+    <xacro:arg name="ns_1" default="" />
+    <xacro:arg name="ns_2" default="" />
+
+    <xacro:include filename="$(find multi_legged_controllers)/urdf/robot_macro.xacro" />
+    <xacro:include filename="$(find multi_legged_controllers)/urdf/rod_with_joints_macro.xacro" />
+
+    <xacro:legged_robot robot_type="$(arg robot_type)" ns="$(arg ns_1)" prefix="$(arg ns_1)_" sim="$(arg sim)">
+        <origin rpy="0 0 0" xyz="0 -0.5 -0.1" />
+    </xacro:legged_robot>
+
+    <xacro:legged_robot robot_type="$(arg robot_type)" ns="$(arg ns_2)" prefix="$(arg ns_2)_" sim="$(arg sim)">
+        <origin rpy="0 0 0" xyz="0 0.5 -0.1" />
+    </xacro:legged_robot>
+
+    <xacro:rod_with_joints first_robot="$(arg ns_1)" second_robot="$(arg ns_2)" />
+
+</robot>

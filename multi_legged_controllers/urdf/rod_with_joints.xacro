@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="rod_only">
+
+    <xacro:arg name="ns_1" default="" />
+    <xacro:arg name="ns_2" default="" />
+
+    <xacro:include filename="$(find multi_legged_controllers)/urdf/rod_with_joints_macro.xacro" />
+
+    <xacro:rod_with_joints first_robot="$(arg ns_1)" second_robot="$(arg ns_2)" />
+
+</robot>

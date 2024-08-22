@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="robot">
+    <xacro:arg name="sim" default="false"/>
+    <xacro:arg name="robot_type" default="a1"/>
+    <xacro:arg name="ns" default=""/>
+
+    <xacro:include filename="$(find legged_unitree_description)/urdf/common/materials.xacro"/>
+    <xacro:include filename="$(find multi_legged_controllers)/urdf/leg_with_ns.xacro"/>
+    <xacro:include filename="$(find legged_unitree_description)/urdf/common/imu.xacro"/>
+    <xacro:include filename="$(find legged_unitree_description)/urdf/$(arg robot_type)/const.xacro"/>
+    <xacro:include filename="$(find custom_description)/urdf/sensor_d435.xacro"/>
+    <xacro:include filename="$(find custom_description)/urdf/sensor_t265.xacro"/>
+
+    <xacro:property name="mesh_path" value="package://legged_unitree_description/meshes/$(arg robot_type)"/>
+
+    <link name="$(arg ns)_base">
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <mesh filename="${mesh_path}/trunk.dae" scale="1 1 1"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size="${trunk_length} ${trunk_width} ${trunk_height}"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <origin rpy="0 0 0" xyz="${trunk_com_x} ${trunk_com_y} ${trunk_com_z}"/>
+            <mass value="${trunk_mass}"/>
+            <inertia
+                    ixx="${trunk_ixx}" ixy="${trunk_ixy}" ixz="${trunk_ixz}"
+                    iyy="${trunk_iyy}" iyz="${trunk_iyz}"
+                    izz="${trunk_izz}"/>
+        </inertial>
+    </link>
+
+    <xacro:IMU connected_to="$(arg ns)_base" imu_name="$(arg ns)_base_imu" xyz="0. 0. 0." rpy="0. 0. 0."/>
+
+
+    <xacro:leg prefix="$(arg ns)_LF" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="1" front_hind_dae="True" ns="$(arg ns)">
+        <origin rpy="0 0 0" xyz="${leg_offset_x} ${leg_offset_y} 0"/>
+    </xacro:leg>
+
+    <xacro:leg prefix="$(arg ns)_LH" mesh_path="${mesh_path}" mirror="1" mirror_dae="True" front_hind="-1" front_hind_dae="False" ns="$(arg ns)">
+        <origin rpy="0 0 0" xyz="${-leg_offset_x} ${leg_offset_y} 0"/>
+    </xacro:leg>
+
+    <xacro:leg prefix="$(arg ns)_RF" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="1" front_hind_dae="True" ns="$(arg ns)">
+        <origin rpy="0 0 0" xyz="${leg_offset_x} ${-leg_offset_y} 0"/>
+    </xacro:leg>
+
+    <xacro:leg prefix="$(arg ns)_RH" mesh_path="${mesh_path}" mirror="-1" mirror_dae="False" front_hind="-1" front_hind_dae="False" ns="$(arg ns)">
+        <origin rpy="0 0 0" xyz="${-leg_offset_x} ${-leg_offset_y} 0"/>
+    </xacro:leg>
+    
+
+    <xacro:sensor_t265 name="$(arg ns)_tracking_camera" topics_ns="tracking_camera" parent="$(arg ns)_base">
+         <origin xyz="0.35 0.0 0.0" rpy="0.0 -0.05 -0.0"/>
+    </xacro:sensor_t265>
+
+    <joint name="$(arg ns)_payload_joint" type="fixed">
+        <parent link="$(arg ns)_base"/>
+        <child link="$(arg ns)_payload"/>
+        <origin rpy="0 0 0" xyz="0 0 0.09"/>
+    </joint>
+
+    <link name="$(arg ns)_payload">
+        <inertial>
+            <mass value="3"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.025" ixy="0" ixz="0" iyy="0.021" iyz="0" izz="0.011"/>
+        </inertial>
+        <visual>
+            <geometry>
+                <box size=".1 .1 .1" />
+            </geometry>
+        </visual>
+    </link>
+
+    <xacro:sensor_d435 name="$(arg ns)_front_camera" topics_ns="$(arg ns)/front_camera" parent="$(arg ns)_base">
+           <origin xyz="0.16 0.048 0.30" rpy="0 0.54359877559 0"/>
+    </xacro:sensor_d435>
+
+    <xacro:if value="$(arg sim)">
+    <!-- ros_control plugin -->
+    <gazebo>
+        <plugin name="gazebo_ros_control" filename="libcustom_legged_hw_sim.so">
+            <robotNamespace>/$(arg ns)</robotNamespace>
+            <robotParam>legged_robot_description</robotParam>
+            <robotSimType>custom_gazebo/CustomLeggedHWSim</robotSimType>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin name="p3d_base_controller" filename="libgazebo_ros_p3d.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>1000.0</updateRate>
+            <bodyName>$(arg ns)_base</bodyName>
+            <topicName>ground_truth/state</topicName>
+            <gaussianNoise>0</gaussianNoise>
+            <frameName>world</frameName>
+            <xyzOffsets>0 0 0</xyzOffsets>
+            <rpyOffsets>0 0 0</rpyOffsets>
+        </plugin>
+    </gazebo>    
+    </xacro:if>  
+
+</robot>
