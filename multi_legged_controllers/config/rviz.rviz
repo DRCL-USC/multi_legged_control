@@ -95,7 +95,7 @@ Visualization Manager:
       Min Intensity: 0
       Name: Elevation Map
       Show Grid Lines: true
-      Topic: /alien1/elevation_mapping/elevation_map
+      Topic: /robot_1/elevation_mapping/elevation_map
       Unreliable: false
       Use ColorMap: true
       Value: true
@@ -109,184 +109,184 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        alien1_LF_FOOT:
+        robot_1_LF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LF_calf:
+        robot_1_LF_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LF_hip:
+        robot_1_LF_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LF_thigh:
+        robot_1_LF_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LH_FOOT:
+        robot_1_LH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LH_calf:
+        robot_1_LH_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LH_hip:
+        robot_1_LH_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_LH_thigh:
+        robot_1_LH_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RF_FOOT:
+        robot_1_RF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RF_calf:
+        robot_1_RF_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RF_hip:
+        robot_1_RF_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RF_thigh:
+        robot_1_RF_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RH_FOOT:
+        robot_1_RH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RH_calf:
+        robot_1_RH_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RH_hip:
+        robot_1_RH_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_RH_thigh:
+        robot_1_RH_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_base:
+        robot_1_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_base_imu:
+        robot_1_base_imu:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_front_camera_bottom_screw_frame:
+        robot_1_front_camera_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_color_frame:
+        robot_1_front_camera_color_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_color_optical_frame:
+        robot_1_front_camera_color_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_depth_frame:
+        robot_1_front_camera_depth_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_depth_optical_frame:
+        robot_1_front_camera_depth_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_left_ir_frame:
+        robot_1_front_camera_left_ir_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_left_ir_optical_frame:
+        robot_1_front_camera_left_ir_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_front_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        alien1_front_camera_right_ir_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_front_camera_right_ir_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_payload:
+        robot_1_front_camera_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_tracking_camera_accel_optical_frame:
+        robot_1_front_camera_right_ir_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_tracking_camera_fisheye1_optical_frame:
+        robot_1_front_camera_right_ir_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien1_tracking_camera_fisheye1_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_tracking_camera_fisheye2_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_tracking_camera_fisheye2_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_tracking_camera_gyro_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien1_tracking_camera_link:
+        robot_1_payload:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien1_tracking_camera_pose_frame:
+        robot_1_tracking_camera_accel_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_fisheye1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_fisheye1_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_fisheye2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_fisheye2_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_gyro_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_1_tracking_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot_1_tracking_camera_pose_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
       Name: RobotModel
-      Robot Description: /alien1/legged_robot_description
+      Robot Description: /robot_1/legged_robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /alien1/legged_robot/optimizedStateTrajectory
+      Marker Topic: /robot_1/legged_robot/optimizedStateTrajectory
       Name: Optimized State Trajectory
       Namespaces:
         CoM Trajectory: true
@@ -368,184 +368,184 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        alien2_LF_FOOT:
+        robot_2_LF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LF_calf:
+        robot_2_LF_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LF_hip:
+        robot_2_LF_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LF_thigh:
+        robot_2_LF_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LH_FOOT:
+        robot_2_LH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LH_calf:
+        robot_2_LH_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LH_hip:
+        robot_2_LH_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_LH_thigh:
+        robot_2_LH_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RF_FOOT:
+        robot_2_RF_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RF_calf:
+        robot_2_RF_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RF_hip:
+        robot_2_RF_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RF_thigh:
+        robot_2_RF_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RH_FOOT:
+        robot_2_RH_FOOT:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RH_calf:
+        robot_2_RH_calf:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RH_hip:
+        robot_2_RH_hip:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_RH_thigh:
+        robot_2_RH_thigh:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_base:
+        robot_2_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_base_imu:
+        robot_2_base_imu:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_front_camera_bottom_screw_frame:
+        robot_2_front_camera_bottom_screw_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_color_frame:
+        robot_2_front_camera_color_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_color_optical_frame:
+        robot_2_front_camera_color_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_depth_frame:
+        robot_2_front_camera_depth_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_depth_optical_frame:
+        robot_2_front_camera_depth_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_left_ir_frame:
+        robot_2_front_camera_left_ir_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_left_ir_optical_frame:
+        robot_2_front_camera_left_ir_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_front_camera_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        alien2_front_camera_right_ir_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_front_camera_right_ir_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_payload:
+        robot_2_front_camera_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_tracking_camera_accel_optical_frame:
+        robot_2_front_camera_right_ir_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_tracking_camera_fisheye1_optical_frame:
+        robot_2_front_camera_right_ir_optical_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        alien2_tracking_camera_fisheye1_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_tracking_camera_fisheye2_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_tracking_camera_fisheye2_rgb_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_tracking_camera_gyro_optical_frame:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-        alien2_tracking_camera_link:
+        robot_2_payload:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        alien2_tracking_camera_pose_frame:
+        robot_2_tracking_camera_accel_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_fisheye1_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_fisheye1_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_fisheye2_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_fisheye2_rgb_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_gyro_optical_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        robot_2_tracking_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        robot_2_tracking_camera_pose_frame:
           Alpha: 1
           Show Axes: false
           Show Trail: false
       Name: RobotModel
-      Robot Description: alien2/legged_robot_description
+      Robot Description: robot_2/legged_robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
     - Class: rviz/MarkerArray
       Enabled: true
-      Marker Topic: /alien2/legged_robot/optimizedStateTrajectory
+      Marker Topic: /robot_2/legged_robot/optimizedStateTrajectory
       Name: Optimized State Trajectory
       Namespaces:
         CoM Trajectory: true
@@ -555,7 +555,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /alien1/legged_robot/desiredBaseTrajectory
+      Marker Topic: /robot_1/legged_robot/desiredBaseTrajectory
       Name: Marker
       Namespaces:
         "": true
@@ -563,7 +563,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Marker
       Enabled: true
-      Marker Topic: /alien2/legged_robot/desiredBaseTrajectory
+      Marker Topic: /robot_2/legged_robot/desiredBaseTrajectory
       Name: Marker
       Namespaces:
         "": true

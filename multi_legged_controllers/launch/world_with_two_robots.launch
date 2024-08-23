@@ -2,8 +2,8 @@
     <arg name="gui" default="true" />
     <arg name="wname" default="empty_world" />
     <arg name="robot_type" default="aliengo"/>
-    <arg name="ns_1" default="alien1" />
-    <arg name="ns_2" default="alien2" />
+    <arg name="ns_1" default="robot_1" />
+    <arg name="ns_2" default="robot_2" />
 
     <include file="$(find gazebo_ros)/launch/empty_world.launch">
         <arg name="world_name"

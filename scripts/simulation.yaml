@@ -36,7 +36,7 @@ windows:
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
       - export ROBOT_TYPE=aliengo
-      - export ROBOT_NAME=alien1
+      - export ROBOT_NAME=robot_1
 
   - window_name: Robot2
     layout: tiled
@@ -53,5 +53,5 @@ windows:
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
       - export ROBOT_TYPE=aliengo
-      - export ROBOT_NAME=alien2
+      - export ROBOT_NAME=robot_2
     

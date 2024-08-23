@@ -7,8 +7,8 @@ def publish_velocity():
     rospy.init_node('velocity_publisher', anonymous=True)
     
     # Create a publisher object for publishing messages to the /cmd_vel topic
-    vel_publisher_1 = rospy.Publisher('/alien1/cmd_vel', Twist, queue_size=10)
-    vel_publisher_2 = rospy.Publisher('/alien2/cmd_vel', Twist, queue_size=10)
+    vel_publisher_1 = rospy.Publisher('/robot_1/cmd_vel', Twist, queue_size=10)
+    vel_publisher_2 = rospy.Publisher('/robot_2/cmd_vel', Twist, queue_size=10)
     
     # Set the loop rate (in Hz)
     rate = rospy.Rate(10) # 10Hz

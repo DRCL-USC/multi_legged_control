@@ -7,9 +7,9 @@ def publish_once(goal):
     # Initialize the ROS node
     rospy.init_node('goal_publisher_node', anonymous=True)
 
-    # Create a publisher for the /alien2/gait topic with std_msgs/String type
-    pub1 = rospy.Publisher('/alien1/goal', PoseStamped, queue_size=10)
-    pub2 = rospy.Publisher('/alien2/goal', PoseStamped, queue_size=10)
+    # Create a publisher for the /robot_2/gait topic with std_msgs/String type
+    pub1 = rospy.Publisher('/robot_1/goal', PoseStamped, queue_size=10)
+    pub2 = rospy.Publisher('/robot_2/goal', PoseStamped, queue_size=10)
 
     # Wait for a short time to ensure the publisher is connected
     rospy.sleep(1)
