@@ -14,16 +14,16 @@ namespace ocs2
   namespace planner
   {
 
-    class ObjectDummyVisualization : public DummyObserver
+    class ObjectVisualization : public DummyObserver
     {
     public:
       /** Visualization settings (publicly available) */
       std::string frameId_ = "map";                                                                 // Frame name all messages are published in
       scalar_t trajectoryLineWidth_ = 0.01;                                                          // LineThickness for trajectories
 
-      explicit ObjectDummyVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile);
+      explicit ObjectVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile);
 
-      ~ObjectDummyVisualization() override = default;
+      ~ObjectVisualization() override = default;
 
       void update(const SystemObservation &observation, const PrimalSolution &policy, const CommandData &command) override;
 

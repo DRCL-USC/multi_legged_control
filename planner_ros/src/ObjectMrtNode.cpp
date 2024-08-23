@@ -8,7 +8,7 @@
 #include <planner/ObjectInterface.h>
 #include <planner/definitions.h>
 
-#include "planner_ros/ObjectDummyVisualization.h"
+#include "planner_ros/ObjectVisualization.h"
 #include <ocs2_mpc/SystemObservation.h>
 
 using namespace ocs2;
@@ -35,7 +35,7 @@ int main(int argc, char **argv)
   mrt.launchNodes(nodeHandle);
 
   // Visualization
-  auto objectDummyVisualization = std::make_shared<ocs2::planner::ObjectDummyVisualization>(nodeHandle, taskFile);
+  auto ObjectVisualization = std::make_shared<ocs2::planner::ObjectVisualization>(nodeHandle, taskFile);
 
   // initial state
   ocs2::SystemObservation initObservation;
@@ -125,7 +125,7 @@ int main(int argc, char **argv)
     }
 
     // update Visualizer
-    objectDummyVisualization->update(currentObservation, mrt.getPolicy(), mrt.getCommand());
+    ObjectVisualization->update(currentObservation, mrt.getPolicy(), mrt.getCommand());
 
     ++loopCounter;
     ros::spinOnce();

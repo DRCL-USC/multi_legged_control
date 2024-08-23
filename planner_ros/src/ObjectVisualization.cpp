@@ -1,4 +1,4 @@
-#include "planner_ros/ObjectDummyVisualization.h"
+#include "planner_ros/ObjectVisualization.h"
 #include <ocs2_ros_interfaces/visualization/VisualizationHelpers.h>
 #include <ocs2_robotic_tools/common/RotationTransforms.h>
 #include <ocs2_core/misc/LoadData.h>
@@ -10,10 +10,10 @@ namespace ocs2
   namespace planner
   {
 
-    ObjectDummyVisualization::ObjectDummyVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile): taskFile_(taskfile) {
+    ObjectVisualization::ObjectVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile): taskFile_(taskfile) {
           launchVisualizerNode(nodeHandle); }
           
-    void ObjectDummyVisualization::update(const SystemObservation &observation, const PrimalSolution &policy, const CommandData &command)
+    void ObjectVisualization::update(const SystemObservation &observation, const PrimalSolution &policy, const CommandData &command)
     {
 
       const auto timeStamp = ros::Time::now();
@@ -31,7 +31,7 @@ namespace ocs2
       publishOptimizedStateTrajectory(timeStamp, policy.timeTrajectory_, policy.stateTrajectory_);
     }
 
-    void ObjectDummyVisualization::launchVisualizerNode(ros::NodeHandle &nodeHandle)
+    void ObjectVisualization::launchVisualizerNode(ros::NodeHandle &nodeHandle)
     {
       desiredBasePositionPublisher_ = nodeHandle.advertise<visualization_msgs::Marker>("/desiredTrajectory", 1);
       stateOptimizedPublisher_ = nodeHandle.advertise<visualization_msgs::Marker>("/optimizedStateTrajectory", 1);
@@ -41,7 +41,7 @@ namespace ocs2
     /******************************************************************************************************/
     /******************************************************************************************************/
     /******************************************************************************************************/
-    void ObjectDummyVisualization::publishDesiredTrajectory(ros::Time timeStamp, const TargetTrajectories &targetTrajectories)
+    void ObjectVisualization::publishDesiredTrajectory(ros::Time timeStamp, const TargetTrajectories &targetTrajectories)
     {
       const auto &stateTrajectory = targetTrajectories.stateTrajectory;
 
@@ -79,7 +79,7 @@ namespace ocs2
     /******************************************************************************************************/
     /******************************************************************************************************/
     /******************************************************************************************************/
-    void ObjectDummyVisualization::publishOptimizedStateTrajectory(ros::Time timeStamp, const scalar_array_t &mpcTimeTrajectory,
+    void ObjectVisualization::publishOptimizedStateTrajectory(ros::Time timeStamp, const scalar_array_t &mpcTimeTrajectory,
                                                                    const vector_array_t &mpcStateTrajectory)
     {
       if (mpcTimeTrajectory.empty() || mpcStateTrajectory.empty())
@@ -109,7 +109,7 @@ namespace ocs2
       stateOptimizedPublisher_.publish(comLineMsg);
     }
 
-    visualization_msgs::Marker ObjectDummyVisualization::ObjectTrajectory(ros::Time timeStamp, const SystemObservation &observation)
+    visualization_msgs::Marker ObjectVisualization::ObjectTrajectory(ros::Time timeStamp, const SystemObservation &observation)
     {
       // Marker visualization
       visualization_msgs::Marker marker;
@@ -145,7 +145,7 @@ namespace ocs2
       return marker;
     }
 
-    visualization_msgs::Marker ObjectDummyVisualization::ObjectTarget(ros::Time timeStamp, const CommandData &command)
+    visualization_msgs::Marker ObjectVisualization::ObjectTarget(ros::Time timeStamp, const CommandData &command)
     {
       const auto &targetTrajectories = command.mpcTargetTrajectories_;
 

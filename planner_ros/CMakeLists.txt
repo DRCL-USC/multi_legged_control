@@ -67,7 +67,7 @@ target_link_libraries(object_mpc
 # Mrt node
 add_executable(object_mrt
   src/ObjectMrtNode.cpp
-  src/ObjectDummyVisualization.cpp
+  src/ObjectVisualization.cpp
 )
 add_dependencies(object_mrt
   ${catkin_EXPORTED_TARGETS}
