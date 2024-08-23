@@ -37,6 +37,19 @@
             <origin rpy="0 0 0" xyz="0 0.5 0" />
         </xacro:ball_joint>
 
+        <gazebo>
+            <plugin name="p3d_rod" filename="libgazebo_ros_p3d.so">
+                <alwaysOn>true</alwaysOn>
+                <updateRate>1000.0</updateRate>
+                <bodyName>rod</bodyName>
+                <topicName>rod_state</topicName>
+                <gaussianNoise>0</gaussianNoise>
+                <frameName>world</frameName>
+                <xyzOffsets>0 0 0</xyzOffsets>
+                <rpyOffsets>0 0 0</rpyOffsets>
+            </plugin>
+        </gazebo>
+
     </xacro:macro>
 
 </robot>

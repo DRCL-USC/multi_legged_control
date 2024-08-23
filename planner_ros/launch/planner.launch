@@ -1,0 +1,18 @@
+<launch>
+  <arg name="multiplot" default="false" />
+  <arg name="task_name" default="mpc" />
+
+  <group if="$(arg multiplot)">
+    <include file="$(find planner_ros)/launch/multiplot.launch" />
+  </group>
+
+  <node pkg="planner_ros" type="object_mpc" name="object_mpc" output="screen" />
+
+  <node pkg="planner_ros" type="object_mrt" name="object_mrt" output="screen" />
+
+  <node pkg="planner_ros" type="planner_target" name="planner_target" output="screen"
+    launch-prefix="gnome-terminal --" />
+
+
+</launch>
+	

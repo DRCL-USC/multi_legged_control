@@ -569,6 +569,31 @@ Visualization Manager:
         "": true
       Queue Size: 100
       Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /object_markers
+      Name: MarkerArray
+      Namespaces:
+        object: true
+        target: true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /optimizedStateTrajectory
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /desiredTrajectory
+      Name: Marker
+      Namespaces:
+        "": true
+      Queue Size: 100
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 238; 238; 238
@@ -595,7 +620,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.803779125213623
+      Distance: 3.8789937496185303
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -603,17 +628,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 1.8621481657028198
-        Y: 1.6302117109298706
-        Z: 0.6581628918647766
+        X: 1.6804499626159668
+        Y: 1.596652865409851
+        Z: 1.1711775064468384
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6703981161117554
+      Pitch: 0.6103979349136353
       Target Frame: <Fixed Frame>
-      Yaw: 1.608599305152893
+      Yaw: 0.8685998320579529
     Saved: ~
 Window Geometry:
   Displays:
