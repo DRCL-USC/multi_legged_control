@@ -14,6 +14,7 @@ namespace ocs2
 
         struct StreamedData
         {
+            scalar_t time;
             vector3_t position;
             quaternion_t quaternion;
             matrix3_t rotmat;
@@ -23,6 +24,19 @@ namespace ocs2
             vector3_t omega_world;
             vector3_t omega_body;
             vector_t state;
+            StreamedData()
+            {
+                time = 0.0;
+                position.setZero();
+                quaternion = quaternion_t(1, 0, 0, 0);
+                rotmat.setIdentity();
+                rpy.setZero();
+                v_world.setZero();
+                v_body.setZero();
+                omega_world.setZero();
+                omega_body.setZero();
+                state.setZero(12);
+            };
         };
 
         class StateEstimation
@@ -32,11 +46,12 @@ namespace ocs2
             {
                 // Create a subscriber to the gazebo_model_state topic
                 modelStateSub = nh.subscribe("/rod_state", 10, &StateEstimation::modelStateCallback, this);
-                object_data.state = vector_t::Zero(12);
             };
 
             void modelStateCallback(const nav_msgs::Odometry::ConstPtr &msg)
             {
+
+                object_data.time = msg->header.stamp.toSec();
 
                 object_data.position(0) = msg->pose.pose.position.x;
                 object_data.position(1) = msg->pose.pose.position.y;

@@ -9,6 +9,7 @@
 #include <planner/definitions.h>
 
 #include "planner_ros/ObjectVisualization.h"
+#include "planner_ros/PlannerInterface.h"
 #include <ocs2_mpc/SystemObservation.h>
 
 using namespace ocs2;
@@ -28,6 +29,12 @@ int main(int argc, char **argv)
 
   // State Estimation
   ocs2::planner::StateEstimation stateEstimation;
+  while (stateEstimation.object_data.time == 0.0)
+  {
+    ros::spinOnce();
+    ROS_INFO_STREAM("Waiting for the state estimation ...");
+  }
+  
 
   // MRT
   ocs2::MRT_ROS_Interface mrt(robotName);
@@ -36,6 +43,9 @@ int main(int argc, char **argv)
 
   // Visualization
   auto ObjectVisualization = std::make_shared<ocs2::planner::ObjectVisualization>(nodeHandle, taskFile);
+
+  // Planner Interface
+  ocs2::planner::PlannerInterface plannerInterface(nodeHandle, taskFile);
 
   // initial state
   ocs2::SystemObservation initObservation;
@@ -126,6 +136,9 @@ int main(int argc, char **argv)
 
     // update Visualizer
     ObjectVisualization->update(currentObservation, mrt.getPolicy(), mrt.getCommand());
+
+    // update Planner
+    plannerInterface.publishTargetTrajectories(currentObservation, mrt.getPolicy(), mrt.getCommand());
 
     ++loopCounter;
     ros::spinOnce();
