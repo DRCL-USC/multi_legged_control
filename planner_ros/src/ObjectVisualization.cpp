@@ -125,13 +125,14 @@ namespace ocs2
       marker.pose.position.z = stateEstimation.object_data.position(2);
 
       Eigen::Matrix<scalar_t, 3, 1> euler;
-      euler << stateEstimation.object_data.rpy(2), stateEstimation.object_data.rpy(1), stateEstimation.object_data.rpy(0) + M_PI/2;
-
+      euler << 0.0, 0.0, M_PI/2;
       const Eigen::Quaternion<scalar_t> quat = getQuaternionFromEulerAnglesZyx(euler); // (yaw, pitch, roll
-      marker.pose.orientation.x = quat.x();
-      marker.pose.orientation.y = quat.y();
-      marker.pose.orientation.z = quat.z();
-      marker.pose.orientation.w = quat.w();
+      const Eigen::Quaternion<scalar_t> target_quat = quat * stateEstimation.object_data.quaternion;
+
+      marker.pose.orientation.x = target_quat.x();
+      marker.pose.orientation.y = target_quat.y();
+      marker.pose.orientation.z = target_quat.z();
+      marker.pose.orientation.w = target_quat.w();
 
       marker.scale.x = 0.06;
       marker.scale.y = 0.06;
@@ -163,13 +164,14 @@ namespace ocs2
       marker.pose.position.z = targetTrajectories.stateTrajectory[1](2);
 
       Eigen::Matrix<scalar_t, 3, 1> euler;
-      euler << targetTrajectories.stateTrajectory[1](5), targetTrajectories.stateTrajectory[1](4), targetTrajectories.stateTrajectory[1](3) + M_PI/2;
-
+      euler << 0.0, 0.0, M_PI/2;
       const Eigen::Quaternion<scalar_t> quat = getQuaternionFromEulerAnglesZyx(euler); // (yaw, pitch, roll
-      marker.pose.orientation.x = quat.x();
-      marker.pose.orientation.y = quat.y();
-      marker.pose.orientation.z = quat.z();
-      marker.pose.orientation.w = quat.w();
+      const Eigen::Quaternion<scalar_t> target_quat = quat * Eigen::Quaternion<scalar_t>(targetTrajectories.stateTrajectory[1](3), targetTrajectories.stateTrajectory[1](4), targetTrajectories.stateTrajectory[1](5), targetTrajectories.stateTrajectory[1](6));
+
+      marker.pose.orientation.x = target_quat.x();
+      marker.pose.orientation.y = target_quat.y();
+      marker.pose.orientation.z = target_quat.z();
+      marker.pose.orientation.w = target_quat.w();
 
       marker.scale.x = 0.06;
       marker.scale.y = 0.06;

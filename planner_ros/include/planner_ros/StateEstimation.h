@@ -2,6 +2,7 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <ocs2_core/Types.h>
+#include <planner/definitions.h>
 
 namespace ocs2
 {
@@ -35,7 +36,7 @@ namespace ocs2
                 v_body.setZero();
                 omega_world.setZero();
                 omega_body.setZero();
-                state.setZero(12);
+                state.setZero(STATE_DIM);
             };
         };
 
@@ -73,10 +74,8 @@ namespace ocs2
                 object_data.omega_world(2) = msg->twist.twist.angular.z;
                 object_data.omega_body = object_data.rotmat * object_data.omega_world;
 
-                object_data.state << object_data.position(0), object_data.position(1), object_data.position(2),
-                    object_data.rpy(0), object_data.rpy(1), object_data.rpy(2),
-                    object_data.v_world(0), object_data.v_world(1), object_data.v_world(2),
-                    object_data.omega_world(0), object_data.omega_world(1), object_data.omega_world(2);
+                object_data.state << object_data.position, object_data.quaternion.coeffs(),
+                    object_data.v_world, object_data.omega_world;
 
                 // ROS_INFO("I heard: x =%f, y=%f, yaw=%f , vx=%f, vy=%f, omega=%f",
                 //          object_data.state[0], object_data.state[1], object_data.state[2], object_data.state[3], object_data.state[4], object_data.state[5]);

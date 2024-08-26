@@ -16,6 +16,7 @@
 #include <ocs2_core/soft_constraint/StateInputSoftConstraint.h>
 #include <ocs2_core/soft_constraint/StateSoftConstraint.h>
 #include <ocs2_core/soft_constraint/StateInputSoftBoxConstraint.h>
+#include <planner/dynamics/ObjectSystemDynamics.h>
 
 // Boost
 #include <boost/filesystem/operations.hpp>
@@ -45,13 +46,6 @@ namespace ocs2
       boost::filesystem::path libraryFolderPath(libraryFolder);
       boost::filesystem::create_directories(libraryFolderPath);
       std::cerr << "[ObjectInterface] Generated library path: " << libraryFolderPath << "\n";
-
-      // Default initial condition
-      loadData::loadEigenMatrix(taskFile, "initialState", initialState_);
-      if (verbose)
-      {
-        std::cerr << "x_init:   " << initialState_.transpose() << "\n";
-      }
 
       // DDP-MPC settings
       ddpSettings_ = ddp::loadSettings(taskFile, "ddp", verbose);
@@ -86,11 +80,7 @@ namespace ocs2
       problem_.finalCostPtr->add("finalCost", std::make_unique<QuadraticStateCost>(Qf));
 
       // Dynamics
-      matrix_t A = matrix_t::Zero(STATE_DIM, STATE_DIM);
-      matrix_t B = matrix_t::Zero(STATE_DIM, INPUT_DIM);
-      A.block(0, 6, 6, 6) = Eigen::Matrix<scalar_t, 6, 6>::Identity();
-      B.block(6, 0, 6, 6) = Eigen::Matrix<scalar_t, 6, 6>::Identity();
-      problem_.dynamicsPtr.reset(new LinearSystemDynamics(A, B));
+      problem_.dynamicsPtr.reset(new ObjectSytemDynamics(libraryFolder, verbose));
 
       // Rollout
       auto rolloutSettings = rollout::loadSettings(taskFile, "rollout", verbose);
