@@ -10,9 +10,11 @@ namespace ocs2
   namespace planner
   {
 
-    ObjectVisualization::ObjectVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile): taskFile_(taskfile) {
-          launchVisualizerNode(nodeHandle); }
-          
+    ObjectVisualization::ObjectVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile) : taskFile_(taskfile)
+    {
+      launchVisualizerNode(nodeHandle);
+    }
+
     void ObjectVisualization::update(const SystemObservation &observation, const PrimalSolution &policy, const CommandData &command)
     {
 
@@ -80,7 +82,7 @@ namespace ocs2
     /******************************************************************************************************/
     /******************************************************************************************************/
     void ObjectVisualization::publishOptimizedStateTrajectory(ros::Time timeStamp, const scalar_array_t &mpcTimeTrajectory,
-                                                                   const vector_array_t &mpcStateTrajectory)
+                                                              const vector_array_t &mpcStateTrajectory)
     {
       if (mpcTimeTrajectory.empty() || mpcStateTrajectory.empty())
       {
@@ -125,9 +127,9 @@ namespace ocs2
       marker.pose.position.z = stateEstimation.object_data.position(2);
 
       Eigen::Matrix<scalar_t, 3, 1> euler;
-      euler << 0.0, 0.0, M_PI/2;
+      euler << 0.0, 0.0, M_PI / 2;
       const Eigen::Quaternion<scalar_t> quat = getQuaternionFromEulerAnglesZyx(euler); // (yaw, pitch, roll
-      const Eigen::Quaternion<scalar_t> target_quat = quat * stateEstimation.object_data.quaternion;
+      const Eigen::Quaternion<scalar_t> target_quat = (stateEstimation.object_data.quaternion * quat).normalized();
 
       marker.pose.orientation.x = target_quat.x();
       marker.pose.orientation.y = target_quat.y();
@@ -164,9 +166,9 @@ namespace ocs2
       marker.pose.position.z = targetTrajectories.stateTrajectory[1](2);
 
       Eigen::Matrix<scalar_t, 3, 1> euler;
-      euler << 0.0, 0.0, M_PI/2;
+      euler << 0.0, 0.0, M_PI / 2;
       const Eigen::Quaternion<scalar_t> quat = getQuaternionFromEulerAnglesZyx(euler); // (yaw, pitch, roll
-      const Eigen::Quaternion<scalar_t> target_quat = quat * Eigen::Quaternion<scalar_t>(targetTrajectories.stateTrajectory[1](3), targetTrajectories.stateTrajectory[1](4), targetTrajectories.stateTrajectory[1](5), targetTrajectories.stateTrajectory[1](6));
+      const Eigen::Quaternion<scalar_t> target_quat = (Eigen::Quaternion<scalar_t>(targetTrajectories.stateTrajectory[1](3), targetTrajectories.stateTrajectory[1](4), targetTrajectories.stateTrajectory[1](5), targetTrajectories.stateTrajectory[1](6)) * quat).normalized();
 
       marker.pose.orientation.x = target_quat.x();
       marker.pose.orientation.y = target_quat.y();

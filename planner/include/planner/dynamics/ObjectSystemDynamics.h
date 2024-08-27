@@ -32,7 +32,9 @@ namespace ocs2
         Eigen::Quaternion<ad_scalar_t> quat(state(3), state(4), state(5), state(6));
         Eigen::Quaternion<ad_scalar_t> omegaQuat(static_cast<ad_scalar_t>(0.0), state(10), state(11), state(12));
         Eigen::Quaternion<ad_scalar_t> quat_dot = (quat * omegaQuat);
-        stateDerivative << state.segment<3>(7), static_cast<ad_scalar_t>(0.5) * quat_dot.coeffs(), input;
+        stateDerivative << state.segment<3>(7),
+            static_cast<ad_scalar_t>(0.5) * quat_dot.w(), static_cast<ad_scalar_t>(0.5) * quat_dot.x(), static_cast<ad_scalar_t>(0.5) * quat_dot.y(), static_cast<ad_scalar_t>(0.5) * quat_dot.z(),
+            input;
         return stateDerivative;
       }
     };

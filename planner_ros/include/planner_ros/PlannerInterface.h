@@ -8,6 +8,7 @@
 #include <ros/package.h>
 #include <ocs2_core/misc/LoadData.h>
 #include <ocs2_ros_interfaces/command/TargetTrajectoriesRosPublisher.h>
+#include <ocs2_robotic_tools/common/RotationTransforms.h>
 
 namespace ocs2
 {
@@ -47,23 +48,39 @@ namespace ocs2
             void publishTargetTrajectories(const SystemObservation &observation, const PrimalSolution &policy, const CommandData &command)
             {
 
-                // State trajectory
-                vector_array_t stateTrajectory(policy.timeTrajectory_.size(), vector_t::Zero(24));
-                for (int i = 0; i < policy.timeTrajectory_.size(); i++)
-                {
-                    stateTrajectory[i] << vector_t::Zero(6), policy.stateTrajectory_[i].segment<2>(0), 0.4,
-                        vector_t::Zero(3), DEFAULT_JOINT_STATE; // roll, pitch and yaw are different
-                }
-
                 // Input trajectory
                 const vector_array_t inputTrajectory(policy.timeTrajectory_.size(), vector_t::Zero(24));
 
                 for (int i = 0; i < 2; i++)
                 {
+                    // Time trajectory
                     scalar_array_t timeTrajectory(policy.timeTrajectory_.size(), 0.0);
                     for (int j = 0; j < policy.timeTrajectory_.size(); j++)
                     {
                         timeTrajectory[j] = robot_observationPtr_[i].time + estimateTimeToTarget(policy.stateTrajectory_[j].segment<3>(0) - observation.state.segment<3>(0));
+                    }
+
+                    // State trajectory
+                    vector_array_t stateTrajectory(policy.timeTrajectory_.size(), vector_t::Zero(24));
+                    for (int j = 0; j < policy.timeTrajectory_.size(); j++)
+                    {
+                        const Eigen::Quaternion<scalar_t> quat = quaternion_t(policy.stateTrajectory_[j](3), policy.stateTrajectory_[j](4), policy.stateTrajectory_[j](5),
+                                                                              policy.stateTrajectory_[j](6));
+                        matrix3_t rotmat = quat.toRotationMatrix();
+
+                        vector3_t robot_COM_target = policy.stateTrajectory_[j].segment<3>(0);
+                        if (i == 0)
+                        {
+                            robot_COM_target += rotmat * (vector3_t() << 0.0, -0.5, 0.0).finished();
+                            robot_COM_target += (vector3_t() << 0.0, 0.5, -0.1).finished();
+                        }
+                        else
+                        {
+                            robot_COM_target += rotmat * (vector3_t() << 0.0, 0.5, 0.0).finished();
+                            robot_COM_target += (vector3_t() << 0.0, -0.5, -0.1).finished();
+                        }
+                        stateTrajectory[j] << vector_t::Zero(6), robot_COM_target(0), robot_COM_target(1), robot_COM_target(2),
+                            vector_t::Zero(3), DEFAULT_JOINT_STATE; // roll, pitch and yaw are different
                     }
 
                     targetTrajectories_[i].timeTrajectory = timeTrajectory;

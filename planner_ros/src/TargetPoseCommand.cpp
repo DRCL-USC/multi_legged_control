@@ -38,7 +38,7 @@ TargetTrajectories commandLineToTargetTrajectories(const vector_t &commadLineTar
   Eigen::Matrix<scalar_t, 3, 1> euler;
   euler << commadLineTarget(5), commadLineTarget(4), commadLineTarget(3);
   euler *= M_PI / 180.0;
-  const Eigen::Quaternion<scalar_t> quat_command = currentQuaternion * getQuaternionFromEulerAnglesZyx(euler);
+  const Eigen::Quaternion<scalar_t> quat_command =  getQuaternionFromEulerAnglesZyx(euler);
 
   const vector_t targetPose = [&]()
   {

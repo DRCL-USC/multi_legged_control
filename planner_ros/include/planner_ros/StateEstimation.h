@@ -74,7 +74,8 @@ namespace ocs2
                 object_data.omega_world(2) = msg->twist.twist.angular.z;
                 object_data.omega_body = object_data.rotmat * object_data.omega_world;
 
-                object_data.state << object_data.position, object_data.quaternion.coeffs(),
+                object_data.state << object_data.position,
+                    object_data.quaternion.w(), object_data.quaternion.x(), object_data.quaternion.y(), object_data.quaternion.z(),
                     object_data.v_world, object_data.omega_world;
 
                 // ROS_INFO("I heard: x =%f, y=%f, yaw=%f , vx=%f, vy=%f, omega=%f",
