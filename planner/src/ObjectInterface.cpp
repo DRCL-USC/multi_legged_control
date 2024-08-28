@@ -18,6 +18,7 @@
 #include <ocs2_core/soft_constraint/StateInputSoftBoxConstraint.h>
 #include <planner/dynamics/ObjectSystemDynamics.h>
 #include <planner/ObjectBoundConstraint.h>
+#include <planner/ObjectCBFConstraint.h>
 
 // Boost
 #include <boost/filesystem/operations.hpp>
@@ -91,31 +92,34 @@ namespace ocs2
 
       // Bound constraints
       SquaredHingePenalty::Config boundsConfig;
-      loadData::loadCppDataType(taskFile, "cbf_penalty_config.mu", boundsConfig.mu);
-      loadData::loadCppDataType(taskFile, "cbf_penalty_config.delta", boundsConfig.delta);
+      loadData::loadCppDataType(taskFile, "penalty_config.bounds.mu", boundsConfig.mu);
+      loadData::loadCppDataType(taskFile, "penalty_config.bounds.delta", boundsConfig.delta);
       problem_.stateSoftConstraintPtr->add("state_bound",
                                            std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectBoundConstraint>(),
                                                                                               std::make_unique<SquaredHingePenalty>(boundsConfig))));
 
       // CBFs
-      // RelaxedBarrierPenalty::Config boundsConfig;
-      // loadData::loadCppDataType(taskFile, "cbf_penalty_config.mu", boundsConfig.mu);
-      // loadData::loadCppDataType(taskFile, "cbf_penalty_config.delta", boundsConfig.delta);
+      SquaredHingePenalty::Config cbfConfig;
+      loadData::loadCppDataType(taskFile, "penalty_config.cbf.mu", cbfConfig.mu);
+      loadData::loadCppDataType(taskFile, "penalty_config.cbf.delta", cbfConfig.delta);
 
-      // scalar_t alpha;
-      // loadData::loadCppDataType(taskFile, "cbf_penalty_config.alpha", alpha);
-
-      // std::vector<std::pair<scalar_t, scalar_t>> obstacles_pose;
-      // scalar_array_t obstacles_radius;
-      // loadData::loadStdVectorOfPair(taskFile, "obstacles.pose", obstacles_pose, verbose);
-      // loadData::loadStdVector(taskFile, "obstacles.radius", obstacles_radius, verbose);
+      vector_array_t obstacles_pose_array;
+      matrix_t obstacles_pose_matrix(OBSTACLES_COUNT, 3);
+      loadData::loadEigenMatrix(taskFile, "obstacles.pose", obstacles_pose_matrix);
+      for (int i = 0; i < obstacles_pose_matrix.rows(); ++i)
+      {
+        obstacles_pose_array.push_back(obstacles_pose_matrix.row(i));
+      }
+      
+      scalar_array_t obstacles_radius;
+      loadData::loadStdVector(taskFile, "obstacles.radius", obstacles_radius, verbose);
 
       // // Obstacles
-      // obstaclesPtr_.reset(new Obstacles(obstacles_pose));
+      obstaclesPtr_.reset(new Obstacles(obstacles_pose_array));
 
-      // problem_.stateSoftConstraintPtr->add("Obstacle_object_cbf",
-      //                                      std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius, alpha),
-      //                                                                                         std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
+      problem_.stateSoftConstraintPtr->add("Obstacle_cbf",
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius),
+                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));
 
       //  std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
 

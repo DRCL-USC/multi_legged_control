@@ -8,21 +8,30 @@ obstacles
 {
   pose
   {
-    [0] "3.5, 1.5"
-    [1] "2, 2"
+    (0,0)  3.0 ; x1
+    (0,1)  0.0 ; x2
+    (0,2)  0.1 ; x3 - TODO
   }
 
   radius
   { 
-    [0] 0.75
-    [1] 0.75
+    [0] 0.1 ; TODO
   }
 }
 
-cbf_penalty_config
+penalty_config
 {
+  bounds
+  {
   mu                       100
   delta                    0.05
+  }
+
+  cbf
+  {
+  mu                       1.0 ; TODO
+  delta                    0.1 : TODO
+  }
 }
 
 input_bounds

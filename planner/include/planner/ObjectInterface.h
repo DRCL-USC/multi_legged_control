@@ -11,7 +11,7 @@
 
 // planenr
 #include "planner/definitions.h"
-#include <planner/CBFs/ObjectCBFConstraint.h>
+#include "planner/ObjectCBFConstraint.h"
 
 namespace ocs2 {
 namespace planner {
@@ -57,6 +57,7 @@ class ObjectInterface final : public RobotInterface {
 
   std::unique_ptr<RolloutBase> rolloutPtr_;
   std::unique_ptr<Initializer> objectInitializerPtr_;
+  std::shared_ptr<Obstacles> obstaclesPtr_;
 };
 
 }  // namespace planner

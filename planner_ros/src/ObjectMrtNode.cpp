@@ -32,7 +32,7 @@ int main(int argc, char **argv)
   while (stateEstimation.object_data.time == 0.0)
   {
     ros::spinOnce();
-    ROS_INFO_STREAM("Waiting for the state estimation ...");
+    ROS_INFO_THROTTLE(5.0, "Waiting for state estimation ...");
   }
   
 
