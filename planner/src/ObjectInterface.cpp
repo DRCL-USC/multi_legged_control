@@ -17,6 +17,7 @@
 #include <ocs2_core/soft_constraint/StateSoftConstraint.h>
 #include <ocs2_core/soft_constraint/StateInputSoftBoxConstraint.h>
 #include <planner/dynamics/ObjectSystemDynamics.h>
+#include <planner/ObjectBoundConstraint.h>
 
 // Boost
 #include <boost/filesystem/operations.hpp>
@@ -87,6 +88,14 @@ namespace ocs2
       rolloutPtr_.reset(new TimeTriggeredRollout(*problem_.dynamicsPtr, rolloutSettings));
 
       // Constraints
+
+      // Bound constraints
+      SquaredHingePenalty::Config boundsConfig;
+      loadData::loadCppDataType(taskFile, "cbf_penalty_config.mu", boundsConfig.mu);
+      loadData::loadCppDataType(taskFile, "cbf_penalty_config.delta", boundsConfig.delta);
+      problem_.stateSoftConstraintPtr->add("state_bound",
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectBoundConstraint>(),
+                                                                                              std::make_unique<SquaredHingePenalty>(boundsConfig))));
 
       // CBFs
       // RelaxedBarrierPenalty::Config boundsConfig;

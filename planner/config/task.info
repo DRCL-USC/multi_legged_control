@@ -21,9 +21,8 @@ obstacles
 
 cbf_penalty_config
 {
-  mu                       0.8
-  delta                    0.5
-  alpha                    1
+  mu                       100
+  delta                    0.05
 }
 
 input_bounds
