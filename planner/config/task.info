@@ -10,12 +10,12 @@ obstacles
   {
     (0,0)  3.0 ; x1
     (0,1)  0.0 ; x2
-    (0,2)  0.1 ; x3 - TODO
+    (0,2)  0.25 ; x3 - TODO
   }
 
   radius
   { 
-    [0] 0.1 ; TODO
+    [0] 0.25 ; TODO
   }
 }
 
@@ -29,7 +29,7 @@ penalty_config
 
   cbf
   {
-  mu                       1.0 ; TODO
+  mu                       0.1 ; TODO
   delta                    0.1 : TODO
   }
 }
