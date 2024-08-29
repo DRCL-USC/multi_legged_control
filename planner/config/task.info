@@ -1,4 +1,4 @@
-targetDisplacementVelocity          0.21;
+targetDisplacementVelocity          0.31;
 targetRotationVelocity              0.8;
 
 obstacles

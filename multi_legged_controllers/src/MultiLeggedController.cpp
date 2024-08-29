@@ -223,7 +223,7 @@ void MultiPerceptiveController::setupMPCwithNh(const std::string ns) {
   auto planarTerrainReceiver =
       std::make_shared<PlanarTerrainReceiver>(nh, dynamic_cast<PerceptiveLeggedInterface&>(*leggedInterface_).getPlanarTerrainPtr(),
                                               dynamic_cast<PerceptiveLeggedInterface&>(*leggedInterface_).getSignedDistanceFieldPtr(),
-                                              "convex_plane_decomposition_ros/planar_terrain", "elevation");
+                                              "/convex_plane_decomposition_ros/planar_terrain", "elevation");
   mpc_->getSolverPtr()->addSynchronizedModule(planarTerrainReceiver);
 }
 

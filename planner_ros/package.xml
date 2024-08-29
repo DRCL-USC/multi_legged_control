@@ -23,5 +23,6 @@
   <depend>ocs2_robotic_assets</depend>
   <depend>gazebo_dev</depend>
   <depend>rosbag</depend>
+  <depend>tf</depend>
   
 </package>

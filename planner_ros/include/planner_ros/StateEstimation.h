@@ -3,6 +3,11 @@
 #include <nav_msgs/Odometry.h>
 #include <ocs2_core/Types.h>
 #include <planner/definitions.h>
+#include <geometry_msgs/TransformStamped.h>
+#include <tf/transform_broadcaster.h>
+#include <tf2_ros/transform_listener.h>
+#include <realtime_tools/realtime_buffer.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace ocs2
 {
@@ -43,7 +48,7 @@ namespace ocs2
         class StateEstimation
         {
         public:
-            StateEstimation()
+            StateEstimation(): tfListener(tfBuffer)
             {
                 // Create a subscriber to the gazebo_model_state topic
                 modelStateSub = nh.subscribe("/rod_state", 10, &StateEstimation::modelStateCallback, this);
@@ -51,12 +56,15 @@ namespace ocs2
 
             void modelStateCallback(const nav_msgs::Odometry::ConstPtr &msg)
             {
+                publishBaseTransform(msg);
+
+                geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("rod_odom", "map", ros::Time(0));
 
                 object_data.time = msg->header.stamp.toSec();
 
-                object_data.position(0) = msg->pose.pose.position.x;
-                object_data.position(1) = msg->pose.pose.position.y;
-                object_data.position(2) = msg->pose.pose.position.z;
+                object_data.position(0) = msg->pose.pose.position.x + transform.transform.translation.x;
+                object_data.position(1) = msg->pose.pose.position.y + transform.transform.translation.y;
+                object_data.position(2) = msg->pose.pose.position.z + transform.transform.translation.z;
 
                 object_data.quaternion = quaternion_t(msg->pose.pose.orientation.w, msg->pose.pose.orientation.x, msg->pose.pose.orientation.y, msg->pose.pose.orientation.z);
 
@@ -67,12 +75,13 @@ namespace ocs2
                 object_data.v_world(1) = msg->twist.twist.linear.y;
                 object_data.v_world(2) = msg->twist.twist.linear.z;
 
-                object_data.v_body = object_data.rotmat * object_data.v_world;
+                object_data.v_body = object_data.rotmat.transpose() * object_data.v_world;
 
                 object_data.omega_world(0) = msg->twist.twist.angular.x;
                 object_data.omega_world(1) = msg->twist.twist.angular.y;
                 object_data.omega_world(2) = msg->twist.twist.angular.z;
-                object_data.omega_body = object_data.rotmat * object_data.omega_world;
+                
+                object_data.omega_body = object_data.rotmat.transpose() * object_data.omega_world;
 
                 object_data.state << object_data.position,
                     object_data.quaternion.w(), object_data.quaternion.x(), object_data.quaternion.y(), object_data.quaternion.z(),
@@ -82,11 +91,32 @@ namespace ocs2
                 //          object_data.state[0], object_data.state[1], object_data.state[2], object_data.state[3], object_data.state[4], object_data.state[5]);
             };
 
+            void publishBaseTransform(const nav_msgs::Odometry::ConstPtr &msg)
+            {
+                geometry_msgs::TransformStamped rodbase2odomTransform;
+                rodbase2odomTransform.header.stamp = msg->header.stamp;
+                rodbase2odomTransform.header.frame_id = "map";
+                rodbase2odomTransform.child_frame_id = "rod_base";
+
+                rodbase2odomTransform.transform.translation.x = msg->pose.pose.position.x;
+                rodbase2odomTransform.transform.translation.y = msg->pose.pose.position.y;
+                rodbase2odomTransform.transform.translation.z = msg->pose.pose.position.z;
+
+                rodbase2odomTransform.transform.rotation.w = msg->pose.pose.orientation.w;
+                rodbase2odomTransform.transform.rotation.x = msg->pose.pose.orientation.x;
+                rodbase2odomTransform.transform.rotation.y = msg->pose.pose.orientation.y;
+                rodbase2odomTransform.transform.rotation.z = msg->pose.pose.orientation.z;
+                rodbase2odomTransform_broadcaster.sendTransform(rodbase2odomTransform);
+            }
+
             StreamedData object_data;
 
         private:
             ros::NodeHandle nh;
             ros::Subscriber modelStateSub;
+            tf::TransformBroadcaster rodbase2odomTransform_broadcaster;
+            tf2_ros::Buffer tfBuffer;
+            tf2_ros::TransformListener tfListener;
         };
 
     } // namespace planner

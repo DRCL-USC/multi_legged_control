@@ -9,6 +9,9 @@
 #include <ocs2_core/misc/LoadData.h>
 #include <ocs2_ros_interfaces/command/TargetTrajectoriesRosPublisher.h>
 #include <ocs2_robotic_tools/common/RotationTransforms.h>
+#include <tf2_ros/transform_listener.h>
+#include <realtime_tools/realtime_buffer.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 
 namespace ocs2
 {
@@ -17,7 +20,7 @@ namespace ocs2
         class PlannerInterface
         {
         public:
-            PlannerInterface(ros::NodeHandle &nodeHandle, const std::string &taskFile)
+            PlannerInterface(ros::NodeHandle &nodeHandle, const std::string &taskFile) : tfListener(tfBuffer)
             {
                 TargetTrajectoriesPublisher_[0].reset(new TargetTrajectoriesRosPublisher(nodeHandle, "/robot_1/legged_robot"));
                 TargetTrajectoriesPublisher_[1].reset(new TargetTrajectoriesRosPublisher(nodeHandle, "/robot_2/legged_robot"));
@@ -71,13 +74,23 @@ namespace ocs2
                         vector3_t robot_COM_target = policy.stateTrajectory_[j].segment<3>(0);
                         if (i == 0)
                         {
+                            // tip of the rod
                             robot_COM_target += rotmat * (vector3_t() << 0.0, -0.5, 0.0).finished();
-                            robot_COM_target += (vector3_t() << 0.0, 0.5, -0.1).finished();
+
+                            geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("robot_1_odom", "rod_odom", ros::Time(0));
+                            robot_COM_target += (vector3_t() << transform.transform.translation.x, transform.transform.translation.y,
+                                                 transform.transform.translation.z - 0.1)
+                                                    .finished();
                         }
                         else
                         {
+                            // tip of the rod
                             robot_COM_target += rotmat * (vector3_t() << 0.0, 0.5, 0.0).finished();
-                            robot_COM_target += (vector3_t() << 0.0, -0.5, -0.1).finished();
+
+                            geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("robot_2_odom", "rod_odom", ros::Time(0));
+                            robot_COM_target += (vector3_t() << transform.transform.translation.x, transform.transform.translation.y,
+                                                 transform.transform.translation.z - 0.1)
+                                                    .finished();
                         }
                         stateTrajectory[j] << vector_t::Zero(6), robot_COM_target(0), robot_COM_target(1), robot_COM_target(2),
                             vector_t::Zero(3), DEFAULT_JOINT_STATE; // roll, pitch and yaw are different
@@ -109,6 +122,8 @@ namespace ocs2
             TargetTrajectories targetTrajectories_[2];
             ros::Subscriber robot_sub[2];
             ocs2::SystemObservation robot_observationPtr_[2];
+            tf2_ros::Buffer tfBuffer;
+            tf2_ros::TransformListener tfListener;
         };
 
     } // namespace planner

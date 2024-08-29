@@ -14,6 +14,7 @@ set(CATKIN_PACKAGE_DEPENDENCIES
   ocs2_robotic_assets
   gazebo_dev
   rosbag
+  tf
 )
 
 find_package(catkin REQUIRED COMPONENTS

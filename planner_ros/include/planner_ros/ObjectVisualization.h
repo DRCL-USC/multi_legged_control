@@ -18,7 +18,7 @@ namespace ocs2
     {
     public:
       /** Visualization settings (publicly available) */
-      std::string frameId_ = "map";                                                                 // Frame name all messages are published in
+      std::string frameId_ = "rod_odom";                                                                 // Frame name all messages are published in
       scalar_t trajectoryLineWidth_ = 0.01;                                                          // LineThickness for trajectories
 
       explicit ObjectVisualization(ros::NodeHandle &nodeHandle, const std::string taskfile);

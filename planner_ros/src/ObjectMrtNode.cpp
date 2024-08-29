@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   initObservation.time = 0.0;
 
   // initial command
-  const ocs2::TargetTrajectories initTargetTrajectories({0.0, initObservation.time}, {ocs2::vector_t::Zero(ocs2::planner::STATE_DIM), initObservation.state},
+  const ocs2::TargetTrajectories initTargetTrajectories({0.0, initObservation.time}, {initObservation.state, initObservation.state},
                                                         {ocs2::vector_t::Zero(ocs2::planner::INPUT_DIM), initObservation.input});
 
   // Run MRT loop

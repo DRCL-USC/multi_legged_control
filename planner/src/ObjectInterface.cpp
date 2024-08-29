@@ -114,12 +114,12 @@ namespace ocs2
       scalar_array_t obstacles_radius;
       loadData::loadStdVector(taskFile, "obstacles.radius", obstacles_radius, verbose);
 
-      // // Obstacles
+      // Obstacles
       obstaclesPtr_.reset(new Obstacles(obstacles_pose_array));
 
-      problem_.stateSoftConstraintPtr->add("Obstacle_cbf",
-                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius),
-                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));
+      // problem_.stateSoftConstraintPtr->add("Obstacle_cbf",
+      //                                      std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius),
+      //                                                                                         std::make_unique<SquaredHingePenalty>(cbfConfig))));
 
       //  std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
 
