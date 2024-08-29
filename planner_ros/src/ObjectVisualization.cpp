@@ -30,7 +30,14 @@ namespace ocs2
 
       // Publish desired trajectory
       publishDesiredTrajectory(timeStamp, command.mpcTargetTrajectories_);
+
+      // Publish optimized trajectory
       publishOptimizedStateTrajectory(timeStamp, policy.timeTrajectory_, policy.stateTrajectory_);
+
+      // Publish obstacles
+      std_msgs::Bool msg;
+      msg.data = true;
+      obstaclesPublisher_.publish(msg);
     }
 
     void ObjectVisualization::launchVisualizerNode(ros::NodeHandle &nodeHandle)
@@ -38,6 +45,7 @@ namespace ocs2
       desiredBasePositionPublisher_ = nodeHandle.advertise<visualization_msgs::Marker>("/desiredTrajectory", 1);
       stateOptimizedPublisher_ = nodeHandle.advertise<visualization_msgs::Marker>("/optimizedStateTrajectory", 1);
       objectPublisher_ = nodeHandle.advertise<visualization_msgs::MarkerArray>("/object_markers", 0);
+      obstaclesPublisher_ = nodeHandle.advertise<std_msgs::Bool>("/obstacle_visualizer", 0);
     }
 
     /******************************************************************************************************/

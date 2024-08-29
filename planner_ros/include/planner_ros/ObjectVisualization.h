@@ -35,10 +35,7 @@ namespace ocs2
       visualization_msgs::Marker ObjectTrajectory(ros::Time timeStamp, const SystemObservation &observation);
       visualization_msgs::Marker ObjectTarget(ros::Time timeStamp, const CommandData &command);
 
-      ros::Publisher desiredBasePositionPublisher_;
-      ros::Publisher stateOptimizedPublisher_;
-      ros::Publisher objectPublisher_;
-      ros::Publisher obstaclesPublisher_;
+      ros::Publisher desiredBasePositionPublisher_, stateOptimizedPublisher_, objectPublisher_, obstaclesPublisher_;
       const std::string taskFile_;
       StateEstimation stateEstimation;
     };

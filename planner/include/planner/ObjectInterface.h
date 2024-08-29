@@ -48,6 +48,8 @@ class ObjectInterface final : public RobotInterface {
 
   const Initializer& getInitializer() const override { return *objectInitializerPtr_; }
 
+  std::shared_ptr<Obstacles> getObstaclesPtr() { return obstaclesPtr_; }
+
  private:
   ddp::Settings ddpSettings_;
   mpc::Settings mpcSettings_;

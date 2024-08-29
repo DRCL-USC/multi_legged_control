@@ -8,6 +8,7 @@
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_ros_interfaces/synchronized_module/SolverObserverRosCallbacks.h>
 #include <planner/ObjectInterface.h>
+#include <planner_ros/ObstacleVisualization.h>
 
 int main(int argc, char** argv) {
   const std::string robotName = "object";
@@ -36,11 +37,11 @@ int main(int argc, char** argv) {
   // mpc.getSolverPtr()->addSynchronizedModule(adaptivecontrolPtr);
 
   //add obstacles
-  // auto obstaclesPtr = objectInterface.getObstaclesPtr();
-  // mpc.getSolverPtr()->addSynchronizedModule(obstaclesPtr);
+  auto obstaclesPtr = objectInterface.getObstaclesPtr();
+  mpc.getSolverPtr()->addSynchronizedModule(obstaclesPtr);
 
   // add visualization
-  // ObstacleVisualization obstacleVisualization(nodeHandle, obstaclesPtr);
+  ObstacleVisualization obstacleVisualization(nodeHandle, obstaclesPtr, taskFile);
 
   // Launch MPC ROS node
   ocs2::MPC_ROS_Interface mpcNode(mpc, robotName);
