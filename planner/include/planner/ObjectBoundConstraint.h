@@ -9,8 +9,12 @@ namespace ocs2
     class ObjectBoundConstraint final : public StateConstraint
     {
     public:
-      ObjectBoundConstraint()
-          : StateConstraint(ConstraintOrder::Linear) {};
+      ObjectBoundConstraint(const std::string &taskFile)
+          : StateConstraint(ConstraintOrder::Linear)
+      {
+        loadData::loadCppDataType(taskFile, "height_bounds.h_min", h_min);
+        loadData::loadCppDataType(taskFile, "height_bounds.h_max", h_max);
+      };
 
       ~ObjectBoundConstraint() override = default;
       ObjectBoundConstraint *clone() const override { return new ObjectBoundConstraint(*this); }
@@ -31,8 +35,8 @@ namespace ocs2
         robot_COM_height[1] = state(2) + rod_tip_2(2) - 0.1;
 
         vector_t constraint(4);
-        constraint << - 0.2 + robot_COM_height[0], 0.6 - robot_COM_height[0], - 0.2 + robot_COM_height[1], 0.6 - robot_COM_height[1];
-        
+        constraint << -h_min + robot_COM_height[0], h_max - robot_COM_height[0], -h_min + robot_COM_height[1], h_max - robot_COM_height[1];
+
         return constraint;
       };
 
@@ -49,11 +53,6 @@ namespace ocs2
         C.row(1) << 0, 0, -1, 0, 0, 0, 0, vector_t::Zero(6);
         C.row(2) << 0, 0, 1, 0, 0, 0, 0, vector_t::Zero(6);
         C.row(3) << 0, 0, -1, 0, 0, 0, 0, vector_t::Zero(6);
-
-        // matrix_t C(2, state.size());
-        // C.row(0) << 0, 0, 1, 0, 0, 0, 0, vector_t::Zero(6);
-        // C.row(1) << 0, 0, -1, 0, 0, 0, 0, vector_t::Zero(6);
-
 
         linearApproximation.dfdx = C;
         return linearApproximation;
@@ -87,6 +86,7 @@ namespace ocs2
 
     private:
       ObjectBoundConstraint(const ObjectBoundConstraint &other) = default;
+      scalar_t h_min, h_max;
     };
 
   } // namespace planner

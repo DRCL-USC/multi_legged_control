@@ -22,7 +22,7 @@ namespace ocs2
                 TargetTrajectoriesPublisher_[0].reset(new TargetTrajectoriesRosPublisher(nodeHandle, "/robot_1/legged_robot"));
                 TargetTrajectoriesPublisher_[1].reset(new TargetTrajectoriesRosPublisher(nodeHandle, "/robot_2/legged_robot"));
 
-                const std::string referenceFile = ros::package::getPath("legged_controllers") + "/config/aliengo/reference.info";
+                const std::string referenceFile = ros::package::getPath("multi_legged_controllers") + "/config/aliengo/reference.info";
                 DEFAULT_JOINT_STATE.resize(12);
                 loadData::loadEigenMatrix(referenceFile, "defaultJointState", DEFAULT_JOINT_STATE);
                 loadData::loadCppDataType(referenceFile, "targetRotationVelocity", TARGET_ROTATION_VELOCITY);

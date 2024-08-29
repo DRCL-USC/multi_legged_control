@@ -95,7 +95,7 @@ namespace ocs2
       loadData::loadCppDataType(taskFile, "penalty_config.bounds.mu", boundsConfig.mu);
       loadData::loadCppDataType(taskFile, "penalty_config.bounds.delta", boundsConfig.delta);
       problem_.stateSoftConstraintPtr->add("state_bound",
-                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectBoundConstraint>(),
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectBoundConstraint>(taskFile),
                                                                                               std::make_unique<SquaredHingePenalty>(boundsConfig))));
 
       // CBFs

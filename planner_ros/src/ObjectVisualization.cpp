@@ -70,7 +70,7 @@ namespace ocs2
       // std::cout << "desiredBasePositionMsg.size(): " << desiredBasePositionMsg.size() << std::endl;
 
       // Headers
-      auto comLineMsg = getLineMsg(std::move(desiredBasePositionMsg), Color::green, trajectoryLineWidth_);
+      auto comLineMsg = getLineMsg(std::move(desiredBasePositionMsg), Color::yellow, trajectoryLineWidth_);
       comLineMsg.header = getHeaderMsg(frameId_, timeStamp);
       comLineMsg.id = 0;
 
@@ -104,7 +104,7 @@ namespace ocs2
         mpcComPositionMsgs.push_back(pose.position); });
 
       // Add headers and Id
-      auto comLineMsg = getLineMsg(std::move(mpcComPositionMsgs), Color::red, trajectoryLineWidth_);
+      auto comLineMsg = getLineMsg(std::move(mpcComPositionMsgs), Color::green, trajectoryLineWidth_);
       comLineMsg.header = getHeaderMsg(frameId_, timeStamp);
       comLineMsg.id = 0;
 
@@ -180,9 +180,9 @@ namespace ocs2
       marker.scale.z = 1;
 
       marker.color.a = 0.2; // Don't forget to set the alpha!
-      marker.color.r = 1.0;
+      marker.color.r = 0.0;
       marker.color.g = 0.0;
-      marker.color.b = 0.0;
+      marker.color.b = 1.0;
 
       return marker;
     }

@@ -14,11 +14,8 @@ windows:
       - shell_command:
         - sleep 10
         - roslaunch planner_ros planner.launch
-      # - shell_command:
-      #   - sleep 20
-      #   - rosrun multi_legged_controllers goal_publisher.py 3.0
       - shell_command:
-        - sleep 3
+        - sleep 2
         - roslaunch multi_legged_controllers rviz.launch      
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
