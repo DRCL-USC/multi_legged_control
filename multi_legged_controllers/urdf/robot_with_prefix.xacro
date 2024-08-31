@@ -58,7 +58,7 @@
     
 
     <xacro:sensor_t265 name="$(arg ns)_tracking_camera" topics_ns="tracking_camera" parent="$(arg ns)_base">
-         <origin xyz="0.35 0.0 0.0" rpy="0.0 -0.05 -0.0"/>
+         <origin xyz="0.3 0.0 0.0" rpy="0.0 -0.05 -0.0"/>
     </xacro:sensor_t265>
 
     <joint name="$(arg ns)_payload_joint" type="fixed">

@@ -74,7 +74,7 @@
 
         <xacro:sensor_t265 name="${prefix}tracking_camera" topics_ns="${ns}/tracking_camera"
             parent="${prefix}base">
-            <origin xyz="0.35 0.0 0.0" rpy="0.0 -0.05 -0.0" />
+            <origin xyz="0.3 0.0 0.0" rpy="0.0 -0.05 -0.0" />
         </xacro:sensor_t265>
 
         <joint name="${prefix}payload_joint" type="fixed">
@@ -96,10 +96,10 @@
             </visual>
         </link>
 
-        <xacro:sensor_d435 name="${prefix}front_camera" topics_ns="${ns}/front_camera"
+        <!-- <xacro:sensor_d435 name="${prefix}front_camera" topics_ns="${ns}/front_camera"
             parent="${prefix}base">
             <origin xyz="0.16 0.0 0.30" rpy="0 0.54359877559 0" />
-        </xacro:sensor_d435>
+        </xacro:sensor_d435> -->
 
         <!-- ros_control plugin -->
         <xacro:if value="${sim}">
