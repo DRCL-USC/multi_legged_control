@@ -9,7 +9,7 @@
 class ObstacleVisualization
 {
 public:
-    std::string frameId_ = "map"; // Frame name all messages are published in
+    std::string frameId_ = "rod_odom"; // Frame name all messages are published in
 
     ObstacleVisualization(ros::NodeHandle &nodehandle, std::shared_ptr<ocs2::planner::Obstacles> obstaclesPtr, const std::string taskFile)
         : obstaclesPtr_(std::move(obstaclesPtr)), nh(nodehandle)

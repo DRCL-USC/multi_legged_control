@@ -21,7 +21,7 @@
 
         <model name='obstacle1'>
           <static>true</static>
-            <pose frame=''>3 0.0 0.25 0 -0 0</pose>
+            <pose frame=''>1.5 0.0 0.25 0 -0 0</pose>
             <link name='obstacle1'>
               <visual name='obstacle1'>
                 <geometry>
@@ -57,7 +57,7 @@
 
           <model name='obstacle2'>
             <static>true</static>
-              <pose frame=''>6 0.0 0.75 0 -0 0</pose>
+              <pose frame=''>3 0.0 0.75 0 -0 0</pose>
               <link name='obstacle2'>
                 <visual name='obstacle2'>
                   <geometry>

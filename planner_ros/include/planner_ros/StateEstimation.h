@@ -56,7 +56,6 @@ namespace ocs2
 
             void modelStateCallback(const nav_msgs::Odometry::ConstPtr &msg)
             {
-                publishBaseTransform(msg);
 
                 geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("rod_odom", "map", ros::Time(0));
 
@@ -87,25 +86,27 @@ namespace ocs2
                     object_data.quaternion.w(), object_data.quaternion.x(), object_data.quaternion.y(), object_data.quaternion.z(),
                     object_data.v_world, object_data.omega_world;
 
+                publishBaseTransform(msg->header.stamp);    
+
                 // ROS_INFO("I heard: x =%f, y=%f, yaw=%f , vx=%f, vy=%f, omega=%f",
                 //          object_data.state[0], object_data.state[1], object_data.state[2], object_data.state[3], object_data.state[4], object_data.state[5]);
             };
 
-            void publishBaseTransform(const nav_msgs::Odometry::ConstPtr &msg)
+            void publishBaseTransform(ros::Time time)
             {
                 geometry_msgs::TransformStamped rodbase2odomTransform;
-                rodbase2odomTransform.header.stamp = msg->header.stamp;
-                rodbase2odomTransform.header.frame_id = "map";
+                rodbase2odomTransform.header.stamp = time;
+                rodbase2odomTransform.header.frame_id = "rod_odom";
                 rodbase2odomTransform.child_frame_id = "rod_base";
 
-                rodbase2odomTransform.transform.translation.x = msg->pose.pose.position.x;
-                rodbase2odomTransform.transform.translation.y = msg->pose.pose.position.y;
-                rodbase2odomTransform.transform.translation.z = msg->pose.pose.position.z;
+                rodbase2odomTransform.transform.translation.x = object_data.position(0);
+                rodbase2odomTransform.transform.translation.y = object_data.position(1);
+                rodbase2odomTransform.transform.translation.z = object_data.position(2);
 
-                rodbase2odomTransform.transform.rotation.w = msg->pose.pose.orientation.w;
-                rodbase2odomTransform.transform.rotation.x = msg->pose.pose.orientation.x;
-                rodbase2odomTransform.transform.rotation.y = msg->pose.pose.orientation.y;
-                rodbase2odomTransform.transform.rotation.z = msg->pose.pose.orientation.z;
+                rodbase2odomTransform.transform.rotation.w = object_data.quaternion.w();
+                rodbase2odomTransform.transform.rotation.x = object_data.quaternion.x();
+                rodbase2odomTransform.transform.rotation.y = object_data.quaternion.y();
+                rodbase2odomTransform.transform.rotation.z = object_data.quaternion.z();
                 rodbase2odomTransform_broadcaster.sendTransform(rodbase2odomTransform);
             }
 
