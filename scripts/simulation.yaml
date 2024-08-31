@@ -5,18 +5,18 @@ windows:
     panes:
       - shell_command:
         - roslaunch multi_legged_controllers world_with_two_robots.launch 
-          wname:=slope_stepping_stone gui:=true x:=5.0 y:=0 z:=0.6
+          wname:=slope_stepping_stone gui:=false x:=5.0 y:=0 z:=0.6
       - shell_command:
         - sleep 5
         - roslaunch multi_legged_controllers elevation_mapping_fixed.launch rviz:=false world_name:=slope_stepping_stone
       - shell_command:
-        - sleep 6
+        - sleep 7
         - rosrun multi_legged_controllers mode_publisher.py STAND
       - shell_command:
-        - sleep 9
-        - rosrun multi_legged_controllers mode_publisher.py TROTTING  
-      - shell_command:
         - sleep 10
+        - rosrun multi_legged_controllers mode_publisher.py STATIC_WALKING  
+      - shell_command:
+        - sleep 14
         - roslaunch planner_ros planner.launch 
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
@@ -25,11 +25,11 @@ windows:
     layout: tiled
     panes:
       - shell_command:
-        - sleep 3
-        - roslaunch multi_legged_controllers load_controller.launch perceptive:=true record_data:=false
-      - shell_command:
         - sleep 4
-        - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
+        - roslaunch multi_legged_controllers load_controller.launch perceptive:=true record_data:=false
+      # - shell_command:
+      #   - sleep 4
+      #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
       - export ROBOT_TYPE=aliengo
@@ -39,11 +39,11 @@ windows:
     layout: tiled
     panes:
       - shell_command:
-        - sleep 3
-        - roslaunch multi_legged_controllers load_controller.launch perceptive:=true record_data:=false
-      - shell_command:
         - sleep 4
-        - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
+        - roslaunch multi_legged_controllers load_controller.launch perceptive:=true record_data:=false
+      # - shell_command:
+      #   - sleep 4
+      #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
       - export ROBOT_TYPE=aliengo
