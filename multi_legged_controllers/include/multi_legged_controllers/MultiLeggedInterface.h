@@ -1,9 +1,9 @@
 
-#include <legged_interface/LeggedInterface.h>
 #include <legged_perceptive_interface/PerceptiveLeggedInterface.h>
 #include <ocs2_core/misc/LoadStdVectorOfPair.h>
 #include <ocs2_core/soft_constraint/StateSoftConstraint.h>
 #include <legged_interface/constraint/LeggedSelfCollisionConstraint.h>
+#include "multi_legged_controllers/ModifiedPerceptiveLeggedReferenceManager.h"
 
 namespace legged
 {
@@ -97,6 +97,22 @@ namespace legged
             PerceptiveLeggedInterface::setupOptimalControlProblem(taskFile, urdfFile, referenceFile, verbose);
             problemPtr_->stateSoftConstraintPtr->add("selfCollisionCorrected",
                                                      getSelfCollisionConstraintCorrected(ns_, centroidalModelInfo_, *pinocchioInterfacePtr_, taskFile, "selfCollision", verbose));
+        }
+
+        void setupReferenceManager(const std::string &taskFile, const std::string &urdfFile, const std::string &referenceFile, bool verbose) override
+        {
+            auto swingTrajectoryPlanner =
+                std::make_unique<SwingTrajectoryPlanner>(loadSwingTrajectorySettings(taskFile, "swing_trajectory_config", verbose), 4);
+
+            std::unique_ptr<EndEffectorKinematics<scalar_t>> eeKinematicsPtr = getEeKinematicsPtr({modelSettings_.contactNames3DoF}, "ALL_FOOT");
+            auto convexRegionSelector =
+                std::make_unique<ConvexRegionSelector>(centroidalModelInfo_, planarTerrainPtr_, *eeKinematicsPtr, numVertices_);
+
+            scalar_t comHeight = 0;
+            loadData::loadCppDataType(referenceFile, "comHeight", comHeight);
+            referenceManagerPtr_.reset(new ModifiedPerceptiveLeggedReferenceManager(centroidalModelInfo_, loadGaitSchedule(referenceFile, verbose),
+                                                                            std::move(swingTrajectoryPlanner), std::move(convexRegionSelector),
+                                                                            *eeKinematicsPtr, comHeight));
         }
 
     private:
