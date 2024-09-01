@@ -1,9 +1,14 @@
 <launch>
   <arg name="multiplot" default="false" />
-  <arg name="task_name" default="mpc" />
+  <arg name="record_data" default="false" />
 
   <group if="$(arg multiplot)">
     <include file="$(find planner_ros)/launch/multiplot.launch" />
+  </group>
+
+  <group if="$(arg record_data)">
+    <node pkg="planner_ros" type="bagfile_recorder" name="bagfile_recorder"
+      output="screen"/>
   </group>
 
   <node pkg="planner_ros" type="object_mpc" name="object_mpc" output="screen" />

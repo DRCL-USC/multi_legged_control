@@ -15,6 +15,7 @@ set(CATKIN_PACKAGE_DEPENDENCIES
   gazebo_dev
   rosbag
   tf
+  grid_map_msgs
 )
 
 find_package(catkin REQUIRED COMPONENTS
@@ -85,6 +86,17 @@ add_dependencies(planner_target
   ${catkin_EXPORTED_TARGETS}
 )
 target_link_libraries(planner_target
+  ${catkin_LIBRARIES}
+)
+
+# Bagfile node
+add_executable(bagfile_recorder
+  src/bagfile_recorder.cpp
+)
+add_dependencies(bagfile_recorder
+  ${catkin_EXPORTED_TARGETS}
+)
+target_link_libraries(bagfile_recorder
   ${catkin_LIBRARIES}
 )
 
