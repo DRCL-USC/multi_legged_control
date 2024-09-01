@@ -8,7 +8,7 @@ windows:
           wname:=slope_stepping_stone gui:=false x:=5.0 y:=0 z:=0.6
       - shell_command:
         - sleep 5
-        - roslaunch multi_legged_controllers elevation_mapping_fixed.launch rviz:=false world_name:=slope_stepping_stone
+        - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=slope_stepping_stone
       - shell_command:
         - sleep 7
         - rosrun multi_legged_controllers mode_publisher.py STAND
@@ -16,8 +16,8 @@ windows:
         - sleep 10
         - rosrun multi_legged_controllers mode_publisher.py STATIC_WALKING  
       - shell_command:
-        - sleep 14
-        - roslaunch planner_ros planner.launch 
+        - sleep 16
+        - roslaunch planner_ros planner.launch record_data:=false
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
 

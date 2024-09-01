@@ -30,7 +30,7 @@ penalty_config
 
   cbf
   {
-  mu                       0.1 ; TODO
+  mu                       0.3 ; TODO
   delta                    0.1 : TODO
   }
 }
