@@ -1,12 +1,6 @@
 <launch>
-  <arg name="rviz" default="false" />
   <arg name="rviz_config" default="$(find legged_deployment)/config/rviz.rviz" />
   <arg name="world_name" default="stairs_stepping_stone" />
-
-  <!-- rviz -->
-  <group if="$(arg rviz)">
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" output="screen" />
-  </group>
 
   <node pkg="point_cloud_io" type="read" name="read_ply" output="screen">
     <param name="file_path"
@@ -16,16 +10,16 @@
     <param name="rate" value="1.0" />
   </node>
 
-  <remap from="/pose" to="/robot_1/pose" />
+  <remap from="/pose" to="/rod_pose" />
 
   <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
     <rosparam command="load"
       file="$(find legged_deployment)/config/elevation_mapping_fixed.yaml" />
 
     <!-- <rosparam param="map_frame_id" subst_value="True">$(arg ns)_odom</rosparam>   -->
-    <rosparam param="robot_base_frame_id" subst_value="True">robot_1_base</rosparam>
-    <rosparam param="track_point_frame_id" subst_value="True">robot_1_base</rosparam>
-    <rosparam param="target_frame_init_submap" subst_value="True">robot_1_base</rosparam>
+    <rosparam param="robot_base_frame_id" subst_value="True">rod_base</rosparam>
+    <rosparam param="track_point_frame_id" subst_value="True">rod_base</rosparam>
+    <rosparam param="target_frame_init_submap" subst_value="True">rod_base</rosparam>
 
     <rosparam command="load"
       file="$(find elevation_mapping_demos)/config/postprocessing/postprocessor_pipeline.yaml" />
@@ -39,7 +33,7 @@
     <rosparam file="$(find legged_deployment)/config/convex_plane_decomposition_node.yaml"
       command="load" />
 
-    <rosparam param="target_frame_id" subst_value="True">robot_1_odom</rosparam>
+    <rosparam param="target_frame_id" subst_value="True">rod_odom</rosparam>
   </node>
 
 

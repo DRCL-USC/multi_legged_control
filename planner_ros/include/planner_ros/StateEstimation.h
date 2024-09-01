@@ -8,6 +8,7 @@
 #include <tf2_ros/transform_listener.h>
 #include <realtime_tools/realtime_buffer.h>
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <realtime_tools/realtime_publisher.h>
 
 namespace ocs2
 {
@@ -48,10 +49,11 @@ namespace ocs2
         class StateEstimation
         {
         public:
-            StateEstimation(): tfListener(tfBuffer)
+            StateEstimation() : tfListener(tfBuffer)
             {
                 // Create a subscriber to the gazebo_model_state topic
                 modelStateSub = nh.subscribe("/rod_state", 10, &StateEstimation::modelStateCallback, this);
+                posePub_.reset(new realtime_tools::RealtimePublisher<geometry_msgs::PoseWithCovarianceStamped>(nh, "/rod_pose", 10));
             };
 
             void modelStateCallback(const nav_msgs::Odometry::ConstPtr &msg)
@@ -79,14 +81,14 @@ namespace ocs2
                 object_data.omega_world(0) = msg->twist.twist.angular.x;
                 object_data.omega_world(1) = msg->twist.twist.angular.y;
                 object_data.omega_world(2) = msg->twist.twist.angular.z;
-                
+
                 object_data.omega_body = object_data.rotmat.transpose() * object_data.omega_world;
 
                 object_data.state << object_data.position,
                     object_data.quaternion.w(), object_data.quaternion.x(), object_data.quaternion.y(), object_data.quaternion.z(),
                     object_data.v_world, object_data.omega_world;
 
-                publishBaseTransform(msg->header.stamp);    
+                publishBaseTransform(msg->header.stamp);
 
                 // ROS_INFO("I heard: x =%f, y=%f, yaw=%f , vx=%f, vy=%f, omega=%f",
                 //          object_data.state[0], object_data.state[1], object_data.state[2], object_data.state[3], object_data.state[4], object_data.state[5]);
@@ -108,6 +110,22 @@ namespace ocs2
                 rodbase2odomTransform.transform.rotation.y = object_data.quaternion.y();
                 rodbase2odomTransform.transform.rotation.z = object_data.quaternion.z();
                 rodbase2odomTransform_broadcaster.sendTransform(rodbase2odomTransform);
+
+                if (lastPub_ + ros::Duration(1. / publishRate) < time)
+                {
+                    if (posePub_->trylock()) {
+                    lastPub_ = time;
+                    posePub_->msg_.header = rodbase2odomTransform.header;
+                    posePub_->msg_.pose.pose.position.x = object_data.position(0);
+                    posePub_->msg_.pose.pose.position.y = object_data.position(1);
+                    posePub_->msg_.pose.pose.position.z = object_data.position(2);
+                    posePub_->msg_.pose.pose.orientation.w = object_data.quaternion.w();
+                    posePub_->msg_.pose.pose.orientation.x = object_data.quaternion.x();
+                    posePub_->msg_.pose.pose.orientation.y = object_data.quaternion.y();
+                    posePub_->msg_.pose.pose.orientation.z = object_data.quaternion.z();
+                    posePub_->unlockAndPublish();
+                    }
+                }
             }
 
             StreamedData object_data;
@@ -115,9 +133,12 @@ namespace ocs2
         private:
             ros::NodeHandle nh;
             ros::Subscriber modelStateSub;
+            std::shared_ptr<realtime_tools::RealtimePublisher<geometry_msgs::PoseWithCovarianceStamped>> posePub_;
             tf::TransformBroadcaster rodbase2odomTransform_broadcaster;
             tf2_ros::Buffer tfBuffer;
             tf2_ros::TransformListener tfListener;
+            ros::Time lastPub_ = ros::Time(0);
+            scalar_t publishRate = 200;
         };
 
     } // namespace planner
