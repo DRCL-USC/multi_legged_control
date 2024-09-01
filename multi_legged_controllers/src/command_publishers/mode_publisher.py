@@ -8,8 +8,7 @@ def publish_once(mode):
     rospy.init_node('mode_publisher_node', anonymous=True)
 
     # Create a publisher for the /robot_2/gait topic with std_msgs/String type
-    pub1 = rospy.Publisher('/robot_1/mode', String, queue_size=10)
-    pub2 = rospy.Publisher('/robot_2/mode', String, queue_size=10)
+    pub = rospy.Publisher('mode', String, queue_size=10)
 
     # Wait for a short time to ensure the publisher is connected
     rospy.sleep(1)
@@ -19,8 +18,7 @@ def publish_once(mode):
     msg.data = mode
 
     # Publish the message once
-    pub1.publish(msg)
-    pub2.publish(msg)
+    pub.publish(msg)
     rospy.loginfo("Published message: %s", msg.data)
 
     # Optionally shut down the node after publishing

@@ -8,8 +8,7 @@ def publish_once(goal):
     rospy.init_node('goal_publisher_node', anonymous=True)
 
     # Create a publisher for the /robot_2/gait topic with std_msgs/String type
-    pub1 = rospy.Publisher('/robot_1/goal', PoseStamped, queue_size=10)
-    pub2 = rospy.Publisher('/robot_2/goal', PoseStamped, queue_size=10)
+    pub = rospy.Publisher('goal', PoseStamped, queue_size=10)
 
     # Wait for a short time to ensure the publisher is connected
     rospy.sleep(1)
@@ -21,8 +20,7 @@ def publish_once(goal):
     msg.pose.position.z = 0.4
 
     # Publish the message once
-    pub1.publish(msg)
-    pub2.publish(msg)
+    pub.publish(msg)
     rospy.loginfo("Published message: %s", msg.pose.position.x)
 
     # Optionally shut down the node after publishing
