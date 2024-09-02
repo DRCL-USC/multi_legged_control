@@ -59,6 +59,11 @@ namespace ocs2
             void modelStateCallback(const nav_msgs::Odometry::ConstPtr &msg)
             {
 
+                while(ros::ok() && !tfBuffer.canTransform("rod_odom", "map", ros::Time(0)))
+                {
+                    ROS_WARN("Waiting for transform from rod_odom to map");
+                    ros::Duration(0.1).sleep();
+                }
                 geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("rod_odom", "map", ros::Time(0));
 
                 object_data.time = msg->header.stamp.toSec();
