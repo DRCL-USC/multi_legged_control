@@ -5,15 +5,16 @@ windows:
     panes:
       - shell_command:
         - roslaunch multi_legged_controllers world_with_two_robots.launch 
-          wname:=slope_stepping_stone gui:=false x:=5.0 y:=0 z:=0.6
+          wname:=$world_name gui:=false x:=0.0 y:=0 z:=0.6
       - shell_command:
         - sleep 5
-        - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=slope_stepping_stone
+        - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=$world_name
       - shell_command:
         - sleep 16
         - roslaunch planner_ros planner.launch record_data:=false
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - export world_name=stepping_stone_only
 
   - window_name: Robot1
     layout: tiled
@@ -26,7 +27,7 @@ windows:
         - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
       - shell_command:
         - sleep 10
-        - rosrun multi_legged_controllers mode_publisher.py STATIC_WALKING __ns:=$ROBOT_NAME
+        - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
       # - shell_command:
       #   - sleep 4
       #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
@@ -46,7 +47,7 @@ windows:
         - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
       - shell_command:
         - sleep 10
-        - rosrun multi_legged_controllers mode_publisher.py STATIC_WALKING __ns:=$ROBOT_NAME
+        - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
       # - shell_command:
       #   - sleep 4
       #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME

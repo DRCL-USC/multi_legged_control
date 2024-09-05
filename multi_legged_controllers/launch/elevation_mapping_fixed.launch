@@ -1,10 +1,9 @@
 <launch>
-  <arg name="rviz_config" default="$(find legged_deployment)/config/rviz.rviz" />
   <arg name="world_name" default="stairs_stepping_stone" />
 
   <node pkg="point_cloud_io" type="read" name="read_ply" output="screen">
     <param name="file_path"
-      value="$(find legged_deployment)/sample_data/$(arg world_name).ply" />
+      value="$(find multi_legged_controllers)/launch/worlds/$(arg world_name).ply" />
     <param name="topic" value="/points" />
     <param name="frame" value="map" />
     <param name="rate" value="1.0" />
