@@ -190,7 +190,7 @@ Q
   ;; Base Pose: [position, orientation] ;;
   (6,6)   1000.0   ; p_base_x
   (7,7)   1000.0   ; p_base_y
-  (8,8)   15000.0   ; p_base_z
+  (8,8)   3000.0   ; p_base_z
   (9,9)   100.0    ; theta_base_z
   (10,10) 300.0    ; theta_base_y
   (11,11) 300.0    ; theta_base_x

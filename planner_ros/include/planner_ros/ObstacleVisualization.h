@@ -27,37 +27,60 @@ public:
         visualization_msgs::MarkerArray markerArray;
         ros::Time timeStamp = ros::Time::now();
 
-        // Marker visualization
+        // Obstacle 1
         visualization_msgs::Marker marker;
-        for (int i = 0; i < obstacles_pose.size(); i++)
-        {
-            marker.header.frame_id = frameId_;
-            marker.header.stamp = timeStamp;
-            marker.ns = "obstacles";
-            marker.id = i;
-            marker.type = visualization_msgs::Marker::CUBE;
-            marker.action = visualization_msgs::Marker::ADD;
 
-            marker.scale.x = 0.1;
-            marker.scale.y = 0.1;
-            marker.scale.z = 2 * obstacles_radius[i];
+        marker.header.frame_id = frameId_;
+        marker.header.stamp = timeStamp;
+        marker.ns = "obstacles";
+        marker.id = 0;
+        marker.type = visualization_msgs::Marker::CUBE;
+        marker.action = visualization_msgs::Marker::ADD;
 
-            marker.color.a = 1.0; // Don't forget to set the alpha!
-            marker.color.r = 0.0;
-            marker.color.g = 0.0;
-            marker.color.b = 1.0;
+        marker.scale.x = 2.0;
+        marker.scale.y = 2.0;
+        marker.scale.z = 1.5;
 
-            marker.pose.position.x = obstacles_pose[i](0);
-            marker.pose.position.y = obstacles_pose[i](1);
-            marker.pose.position.z = obstacles_pose[i](2);
+        marker.color.a = 1.0; // Don't forget to set the alpha!
+        marker.color.r = 0.0;
+        marker.color.g = 0.0;
+        marker.color.b = 1.0;
 
-            marker.pose.orientation.x = 0.0;
-            marker.pose.orientation.y = 0.0;
-            marker.pose.orientation.z = 0.0;
-            marker.pose.orientation.w = 1.0;
+        marker.pose.position.x = 3.6;
+        marker.pose.position.y = -1.5;
+        marker.pose.position.z = 0.75;
 
-            markerArray.markers.push_back(marker);
-        }
+        marker.pose.orientation.x = 0.0;
+        marker.pose.orientation.y = 0.0;
+        marker.pose.orientation.z = 0.0;
+        marker.pose.orientation.w = 1.0;
+
+        markerArray.markers.push_back(marker);
+
+        // Obstacle 2
+        marker.id = 1;
+        marker.scale.x = 0.3;
+        marker.scale.y = 5.0;
+        marker.scale.z = 2.0;
+
+        marker.pose.position.x = 6.05;
+        marker.pose.position.y = 0.0;
+        marker.pose.position.z = 1.45;
+
+        markerArray.markers.push_back(marker);
+
+        // Obstacle 3
+        marker.id = 2;
+        marker.scale.x = 0.35;
+        marker.scale.y = 0.4;
+        marker.scale.z = 0.55;
+
+        marker.pose.position.x = 8.6;
+        marker.pose.position.y = 0.0;
+        marker.pose.position.z = 0.275;
+
+        markerArray.markers.push_back(marker);
+
 
         obstaclesPublisher_.publish(markerArray);
     }

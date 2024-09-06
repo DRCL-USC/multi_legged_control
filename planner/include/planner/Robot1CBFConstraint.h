@@ -27,14 +27,12 @@ namespace ocs2
 
         for (size_t i = 0; i < pos_array_.size(); ++i)
         {
-          scalar_t B = -(radius_array_[i] + 0.1) * (radius_array_[i] + 0.1) +
+          scalar_t B = -(radius_array_[i] + 0.2) * (radius_array_[i] + 0.2) +
                        (state(0) - pos_array_[i](0)) * (state(0) - pos_array_[i](0)) +
-                       (state(1) - pos_array_[i](1)) * (state(1) - 0.5 - pos_array_[i](1)) +
-                       (state(2) - pos_array_[i](2)) * (state(2) - pos_array_[i](2));
+                       (state(1) - pos_array_[i](1)) * (state(1) - 0.5 - pos_array_[i](1));
           constraint(i) = B +
                           2 * (state(0) - pos_array_[i](0)) * state(7) +
-                          2 * (state(1) - 0.5 - pos_array_[i](1)) * state(8) +
-                          2 * (state(2) - pos_array_[i](2)) * state(9);
+                          2 * (state(1) - 0.5 - pos_array_[i](1)) * state(8);
         }
 
         return constraint;
@@ -54,11 +52,11 @@ namespace ocs2
         {
           C.row(i) << 2 * (state(0) - pos_array_[i](0)) + 2 * state(7),
               2 * (state(1) - 0.5 - pos_array_[i](1)) + 2 * state(8),
-              2 * (state(2) - pos_array_[i](2)) + 2 * state(9),
+              0,
               0, 0, 0, 0,
               2 * (state(0) - pos_array_[i](0)),
               2 * (state(1) - 0.5 - pos_array_[i](1)),
-              2 * (state(2) - pos_array_[i](2)),
+              0,
               0, 0, 0;
         }
 
@@ -79,15 +77,12 @@ namespace ocs2
         matrix_t dC = matrix_t::Zero(state.size(), state.size());
         dC(0, 0) = 2;
         dC(1, 1) = 2;
-        dC(2, 2) = 2;
         
         dC(0, 7) = 2;
         dC(1, 8) = 2;
-        dC(2, 9) = 2;
 
         dC(7, 0) = 2;
         dC(8, 1) = 2;
-        dC(9, 2) = 2;
 
         for (size_t i = 0; i < pos_array_.size(); ++i)
         {

@@ -75,7 +75,7 @@ namespace ocs2
                         if (i == 0)
                         {
                             // tip of the rod
-                            robot_COM_target += rotmat * (vector3_t() << 0.0, -0.5, 0.0).finished();
+                            robot_COM_target += (vector3_t() << 0.0, -0.5, 0.0).finished();
 
                             geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("robot_1_odom", "rod_odom", ros::Time(0));
                             robot_COM_target += (vector3_t() << transform.transform.translation.x, transform.transform.translation.y,
@@ -85,7 +85,7 @@ namespace ocs2
                         else
                         {
                             // tip of the rod
-                            robot_COM_target += rotmat * (vector3_t() << 0.0, 0.5, 0.0).finished();
+                            robot_COM_target += (vector3_t() << 0.0, 0.5, 0.0).finished();
 
                             geometry_msgs::TransformStamped transform = tfBuffer.lookupTransform("robot_2_odom", "rod_odom", ros::Time(0));
                             robot_COM_target += (vector3_t() << transform.transform.translation.x, transform.transform.translation.y,

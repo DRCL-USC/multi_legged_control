@@ -5,16 +5,16 @@ windows:
     panes:
       - shell_command:
         - roslaunch multi_legged_controllers world_with_two_robots.launch 
-          wname:=$world_name gui:=false x:=0.0 y:=0 z:=0.6
+          wname:=$world_name gui:=true x:=-1.0 y:=0 z:=0.6
       - shell_command:
-        - sleep 5
+        - sleep 2
         - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=$world_name
       - shell_command:
-        - sleep 16
-        - roslaunch planner_ros planner.launch record_data:=false
+        - sleep 10
+        - roslaunch planner_ros planner.launch record_data:=true
     shell_command_before:
       - source ~/Projects/ocs2_ws/devel/setup.bash 
-      - export world_name=stepping_stone_only
+      - export world_name=obstacle_course
 
   - window_name: Robot1
     layout: tiled
@@ -26,7 +26,7 @@ windows:
         - sleep 7
         - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
       - shell_command:
-        - sleep 10
+        - sleep 12
         - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
       # - shell_command:
       #   - sleep 4
@@ -46,7 +46,7 @@ windows:
         - sleep 7
         - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
       - shell_command:
-        - sleep 10
+        - sleep 12
         - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
       # - shell_command:
       #   - sleep 4

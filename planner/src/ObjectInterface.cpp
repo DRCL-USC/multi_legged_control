@@ -112,7 +112,7 @@ namespace ocs2
       {
         obstacles_pose_array.push_back(obstacles_pose_matrix.row(i));
       }
-      
+
       scalar_array_t obstacles_radius;
       loadData::loadStdVector(taskFile, "obstacles.radius", obstacles_radius, verbose);
 
@@ -123,50 +123,56 @@ namespace ocs2
                                            std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius),
                                                                                               std::make_unique<SquaredHingePenalty>(cbfConfig))));
 
+      // 2d obstacles
+      SquaredHingePenalty::Config cbf2dConfig;
+      loadData::loadCppDataType(taskFile, "2d_penalty_config.mu", cbf2dConfig.mu);
+      loadData::loadCppDataType(taskFile, "2d_penalty_config.delta", cbf2dConfig.delta);
+
+      vector_array_t obstacles2d_pose_array;
+      matrix_t obstacles2d_pose_matrix(1, 3);
+      loadData::loadEigenMatrix(taskFile, "obstacles_2d.pose", obstacles2d_pose_matrix);
+      for (int i = 0; i < obstacles2d_pose_matrix.rows(); ++i)
+      {
+        obstacles2d_pose_array.push_back(obstacles2d_pose_matrix.row(i));
+      }
+
+      scalar_array_t obstacles2d_radius;
+      loadData::loadStdVector(taskFile, "obstacles_2d.radius", obstacles2d_radius, verbose);
+
+      // Obstacles
+      obstacles2dPtr_.reset(new Obstacles(obstacles2d_pose_array));
+
       // Robot 1
       problem_.stateSoftConstraintPtr->add("Robot1_cbf",
-                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot1CBFConstraint>(obstaclesPtr_, obstacles_radius),
-                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot1CBFConstraint>(obstacles2dPtr_, obstacles2d_radius),
+                                                                                              std::make_unique<SquaredHingePenalty>(cbf2dConfig))));
 
       // Robot 2
       problem_.stateSoftConstraintPtr->add("Robot2_cbf",
-                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot2CBFConstraint>(obstaclesPtr_, obstacles_radius),
-                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));                                                                                                                                                                                
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot2CBFConstraint>(obstacles2dPtr_, obstacles2d_radius),
+                                                                                              std::make_unique<SquaredHingePenalty>(cbf2dConfig))));
 
       //  std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
 
       // Box constraints
-      // std::vector<std::pair<scalar_t, scalar_t>> d_range;
-      // loadData::loadStdVectorOfPair(taskFile, "input_bounds.d_range", d_range, verbose);
-      // scalar_t F_max;
-      // loadData::loadCppDataType(taskFile, "input_bounds.F_max", F_max);
+      StateInputSoftBoxConstraint::BoxConstraint boxConstraint;
 
-      // StateInputSoftBoxConstraint::BoxConstraint boxConstraint;
+      std::vector<StateInputSoftBoxConstraint::BoxConstraint> stateLimits;
+      stateLimits.reserve(STATE_DIM);
 
-      // std::vector<StateInputSoftBoxConstraint::BoxConstraint> stateLimits;
-      // stateLimits.reserve(STATE_DIM);
+      std::vector<StateInputSoftBoxConstraint::BoxConstraint> inputLimits;
+      inputLimits.reserve(INPUT_DIM);
 
-      // std::vector<StateInputSoftBoxConstraint::BoxConstraint> inputLimits;
-      // inputLimits.reserve(INPUT_DIM);
-      // for (int i = 0; i < AGENT_COUNT; ++i)
-      // {
-      //   boxConstraint.index = i;
-      //   boxConstraint.lowerBound = 0;
-      //   boxConstraint.upperBound = F_max;
-      //   boxConstraint.penaltyPtr.reset(new RelaxedBarrierPenalty(RelaxedBarrierPenalty::Config(0.1, 0.01)));
-      //   inputLimits.push_back(boxConstraint);
+      boxConstraint.index = 0;
+      boxConstraint.lowerBound = 0;
+      boxConstraint.upperBound = 10;
+      boxConstraint.penaltyPtr.reset(new RelaxedBarrierPenalty(RelaxedBarrierPenalty::Config(0.1, 0.01)));
+      inputLimits.push_back(boxConstraint);
 
-      //   boxConstraint.index = i + AGENT_COUNT;
-      //   boxConstraint.lowerBound = d_range[i].first;
-      //   boxConstraint.upperBound = d_range[i].second;
-      //   boxConstraint.penaltyPtr.reset(new RelaxedBarrierPenalty(RelaxedBarrierPenalty::Config(0.1, 1e-3)));
-      //   inputLimits.push_back(boxConstraint);
-      // }
+      auto boxConstraints = std::make_unique<StateInputSoftBoxConstraint>(stateLimits, inputLimits);
+      boxConstraints->initializeOffset(0.0, vector_t::Zero(STATE_DIM), vector_t::Zero(INPUT_DIM));
 
-      // auto boxConstraints = std::make_unique<StateInputSoftBoxConstraint>(stateLimits, inputLimits);
-      // boxConstraints->initializeOffset(0.0, vector_t::Zero(STATE_DIM), vector_t::Zero(INPUT_DIM));
-
-      // problem_.softConstraintPtr->add("BoxConstraints", std::move(boxConstraints));
+      problem_.softConstraintPtr->add("BoxConstraints", std::move(boxConstraints));
 
       // Initialization
       objectInitializerPtr_.reset(new DefaultInitializer(INPUT_DIM));

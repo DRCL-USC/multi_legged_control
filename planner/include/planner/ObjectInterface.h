@@ -60,6 +60,7 @@ class ObjectInterface final : public RobotInterface {
   std::unique_ptr<RolloutBase> rolloutPtr_;
   std::unique_ptr<Initializer> objectInitializerPtr_;
   std::shared_ptr<Obstacles> obstaclesPtr_;
+  std::shared_ptr<Obstacles> obstacles2dPtr_;
 };
 
 }  // namespace planner
