@@ -19,6 +19,8 @@
 #include <planner/dynamics/ObjectSystemDynamics.h>
 #include <planner/ObjectBoundConstraint.h>
 #include <planner/ObjectCBFConstraint.h>
+#include <planner/Robot1CBFConstraint.h>
+#include <planner/Robot2CBFConstraint.h>
 
 // Boost
 #include <boost/filesystem/operations.hpp>
@@ -120,6 +122,16 @@ namespace ocs2
       problem_.stateSoftConstraintPtr->add("Obstacle_cbf",
                                            std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<ObjectCBFConstraint>(obstaclesPtr_, obstacles_radius),
                                                                                               std::make_unique<SquaredHingePenalty>(cbfConfig))));
+
+      // Robot 1
+      problem_.stateSoftConstraintPtr->add("Robot1_cbf",
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot1CBFConstraint>(obstaclesPtr_, obstacles_radius),
+                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));
+
+      // Robot 2
+      problem_.stateSoftConstraintPtr->add("Robot2_cbf",
+                                           std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot2CBFConstraint>(obstaclesPtr_, obstacles_radius),
+                                                                                              std::make_unique<SquaredHingePenalty>(cbfConfig))));                                                                                                                                                                                
 
       //  std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
 
