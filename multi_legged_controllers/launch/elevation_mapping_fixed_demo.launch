@@ -1,0 +1,37 @@
+<launch>
+  <arg name="world_name" default="stairs_stepping_stone" />
+  <arg name="rviz_config" default="$(find multi_legged_controllers)/config/rviz.rviz" />
+
+  <node pkg="point_cloud_io" type="read" name="read_ply" output="screen">
+    <param name="file_path"
+      value="$(find multi_legged_controllers)/launch/worlds/$(arg world_name).ply" />
+    <param name="topic" value="/points" />
+    <param name="frame" value="map" />
+    <param name="rate" value="1.0" />
+  </node>
+
+  <node pkg="elevation_mapping" type="elevation_mapping" name="elevation_mapping" output="screen">
+    <rosparam command="load"
+      file="$(find elevation_mapping_demos)/config/robots/ground_truth_demo.yaml" />
+    <rosparam command="load"
+      file="$(find elevation_mapping_demos)/config/elevation_maps/long_range.yaml" />
+    <rosparam command="load" file="$(find elevation_mapping)/config/sensor_processors/perfect.yaml" />
+
+    <rosparam command="load"
+      file="$(find elevation_mapping_demos)/config/postprocessing/postprocessor_pipeline.yaml" />
+  </node>
+
+  <!-- Launch the plane decomposition node. -->
+  <node pkg="convex_plane_decomposition_ros" type="convex_plane_decomposition_ros_node"
+    name="convex_plane_decomposition_ros" output="screen">
+    <rosparam file="$(find legged_perceptive_controllers)/config/convex_plane_decomposition.yaml"
+      command="load" />
+    <rosparam file="$(find legged_deployment)/config/convex_plane_decomposition_node.yaml"
+      command="load" />
+
+    <rosparam param="target_frame_id" subst_value="True">map</rosparam>
+  </node>
+
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" output="screen" />
+
+</launch>
