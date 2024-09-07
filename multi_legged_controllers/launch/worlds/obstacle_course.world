@@ -314,7 +314,7 @@
       </link>
 
       <link name="obstacle2">
-        <pose>5.05 0 2.05 0 0 0</pose>
+        <pose>5.05 0 2.1 0 0 0</pose>
         <collision name="obstacle2_collision">
           <geometry>
             <box>
@@ -339,18 +339,18 @@
       </link>
 
       <link name="obstacle3">
-        <pose>7.6 0 0.875 0 0 0</pose>
+        <pose>7.6 0 0.8 0 0 0</pose>
         <collision name="obstacle3_collision">
           <geometry>
             <box>
-              <size>0.35 0.4 0.55</size>
+              <size>0.35 0.4 0.45</size>
             </box>
           </geometry>
         </collision>
         <visual name="obstacle3_visual">
           <geometry>
             <box>
-              <size>0.35 0.4 0.55</size>
+              <size>0.35 0.4 0.45</size>
             </box>
           </geometry>
           <material>
