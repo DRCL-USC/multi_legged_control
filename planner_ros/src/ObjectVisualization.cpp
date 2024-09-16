@@ -24,8 +24,10 @@ namespace ocs2
       visualization_msgs::MarkerArray objectmarkers;
       visualization_msgs::Marker target_marker = ObjectTarget(timeStamp, command);
       visualization_msgs::Marker object_marker = ObjectTrajectory(timeStamp, observation);
+      visualization_msgs::Marker payload_marker = PayloadTrajectory(timeStamp, observation);
       objectmarkers.markers.push_back(target_marker);
       objectmarkers.markers.push_back(object_marker);
+      objectmarkers.markers.push_back(payload_marker);
       objectPublisher_.publish(objectmarkers);
 
       // Publish desired trajectory
@@ -150,6 +152,43 @@ namespace ocs2
 
       marker.color.a = 1.0; // Don't forget to set the alpha!
       marker.color.r = 0.0;
+      marker.color.g = 1.0;
+      marker.color.b = 0.0;
+
+      return marker;
+    }
+
+    visualization_msgs::Marker ObjectVisualization::PayloadTrajectory(ros::Time timeStamp, const SystemObservation &observation)
+    {
+      // Marker visualization
+      visualization_msgs::Marker marker;
+      marker.header.frame_id = frameId_;
+      marker.header.stamp = timeStamp;
+      marker.ns = "payload";
+      marker.id = 0;
+      marker.type = visualization_msgs::Marker::CUBE;
+      marker.action = visualization_msgs::Marker::ADD;
+
+      marker.pose.position.x = stateEstimation.object_data.position(0);
+      marker.pose.position.y = stateEstimation.object_data.position(1);
+      marker.pose.position.z = stateEstimation.object_data.position(2);
+
+      Eigen::Matrix<scalar_t, 3, 1> euler;
+      euler << 0.0, 0.0, M_PI / 2;
+      const Eigen::Quaternion<scalar_t> quat = getQuaternionFromEulerAnglesZyx(euler); // (yaw, pitch, roll
+      const Eigen::Quaternion<scalar_t> target_quat = (stateEstimation.object_data.quaternion * quat).normalized();
+
+      marker.pose.orientation.x = target_quat.x();
+      marker.pose.orientation.y = target_quat.y();
+      marker.pose.orientation.z = target_quat.z();
+      marker.pose.orientation.w = target_quat.w();
+
+      marker.scale.x = 0.2;
+      marker.scale.y = 0.2;
+      marker.scale.z = 0.15;
+
+      marker.color.a = 1.0; // Don't forget to set the alpha!
+      marker.color.r = 1.0;
       marker.color.g = 1.0;
       marker.color.b = 0.0;
 
