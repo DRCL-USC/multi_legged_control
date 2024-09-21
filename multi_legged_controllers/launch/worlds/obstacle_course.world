@@ -314,7 +314,7 @@
       </link>
 
       <link name="obstacle2">
-        <pose>5.05 0 2.1 0 0 0</pose>
+        <pose>5.05 0 2.15 0 0 0</pose>
         <collision name="obstacle2_collision">
           <geometry>
             <box>

@@ -65,7 +65,7 @@ public:
 
         marker.pose.position.x = 6.05;
         marker.pose.position.y = 0.0;
-        marker.pose.position.z = 1.5;
+        marker.pose.position.z = 1.55;
 
         markerArray.markers.push_back(marker);
 
