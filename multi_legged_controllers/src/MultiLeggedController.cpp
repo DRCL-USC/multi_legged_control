@@ -7,7 +7,7 @@
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
 #include <legged_wbc/WeightedWbc.h>
-#include "legged_perceptive_controllers/synchronized_module/PlanarTerrainReceiver.h"
+#include "multi_legged_controllers/PlanarTerrainReceiver.h"
 #include "legged_perceptive_interface/PerceptiveLeggedReferenceManager.h"
 #include "multi_legged_controllers/MultiLeggedInterface.h"
 #include <multi_legged_controllers/legged_estimation/ModifiedLinearKalmanFilter.h>
