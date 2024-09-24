@@ -5,7 +5,7 @@ windows:
     panes:
       - shell_command:
         - roslaunch multi_legged_controllers world_with_two_robots.launch 
-          wname:=$world_name gui:=true x:=-1.0 y:=0 z:=0.6
+          wname:=$world_name gui:=false x:=-1.0 y:=0 z:=0.6
       - shell_command:
         - sleep 2
         - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=$world_name
