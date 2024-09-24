@@ -1,0 +1,58 @@
+session_name: Collaborative_Control
+windows:
+  - window_name: Simulation
+    layout: tiled
+    panes:
+      - shell_command:
+        - roslaunch multi_legged_controllers world_with_two_robots.launch 
+          wname:=$world_name gui:=false x:=0.0 y:=0 z:=0.0
+      # - shell_command:
+      #   - sleep 5
+      #   - roslaunch multi_legged_controllers elevation_mapping_fixed.launch world_name:=$world_name
+      - shell_command:
+        - sleep 16
+        - roslaunch planner_ros planner.launch record_data:=false
+    shell_command_before:
+      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - export world_name=obstacle
+
+  - window_name: Robot1
+    layout: tiled
+    panes:
+      - shell_command:
+        - sleep 4
+        - roslaunch multi_legged_controllers load_controller.launch perceptive:=false record_data:=false
+      - shell_command:
+        - sleep 7
+        - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
+      - shell_command:
+        - sleep 10
+        - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
+      # - shell_command:
+      #   - sleep 4
+      #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
+    shell_command_before:
+      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - export ROBOT_TYPE=aliengo
+      - export ROBOT_NAME=robot_1
+
+  - window_name: Robot2
+    layout: tiled
+    panes:
+      - shell_command:
+        - sleep 4
+        - roslaunch multi_legged_controllers load_controller.launch perceptive:=false record_data:=false
+      - shell_command:
+        - sleep 7
+        - rosrun multi_legged_controllers mode_publisher.py STAND __ns:=$ROBOT_NAME
+      - shell_command:
+        - sleep 10
+        - rosrun multi_legged_controllers mode_publisher.py TROTTING __ns:=$ROBOT_NAME
+      # - shell_command:
+      #   - sleep 4
+      #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
+    shell_command_before:
+      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - export ROBOT_TYPE=aliengo
+      - export ROBOT_NAME=robot_2
+    

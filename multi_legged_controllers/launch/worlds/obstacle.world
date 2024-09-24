@@ -19,15 +19,14 @@
             <uri>model://ground_plane</uri>
         </include>
 
-        <model name='box'>
+        <model name='obstacle1'>
           <static>true</static>
-            <pose frame=''>3 0.0 0.5 0 -0 0</pose>
-            <link name='box'>
-              <visual name='Stairs_1_Visual_0'>
-                <pose frame=''>-0 0 0 0 -0 0</pose>
+            <pose frame=''>1.5 0.0 0.25 0 -0 0</pose>
+            <link name='obstacle1'>
+              <visual name='obstacle1'>
                 <geometry>
                   <box>
-                    <size>0.1 0.1 1</size>
+                    <size>0.1 0.1 0.5</size>
                   </box>
                 </geometry>
                 <material>
@@ -38,10 +37,10 @@
                   <ambient>1 1 1 1</ambient>
                 </material>
               </visual>
-              <collision name='Stairs_1_Collision_0'>
+              <collision name='obstacle1'>
                 <geometry>
                   <box>
-                    <size>0.1 0.1 1</size>
+                    <size>0.1 0.1 0.5</size>
                   </box>
                 </geometry>
                 <surface>
@@ -52,10 +51,45 @@
                       </ode>
                     </friction >
                   </surface>
-                <pose frame=''>0 0 0 0 0 0</pose>
               </collision>
             </link>
           </model>
+
+          <model name='obstacle2'>
+            <static>true</static>
+              <pose frame=''>3 0.0 0.75 0 -0 0</pose>
+              <link name='obstacle2'>
+                <visual name='obstacle2'>
+                  <geometry>
+                    <box>
+                      <size>0.1 0.1 0.5</size>
+                    </box>
+                  </geometry>
+                  <material>
+                    <script>
+                      <uri>file://media/materials/scripts/gazebo.material</uri>
+                      <name>Gazebo/Wood</name>
+                    </script>
+                    <ambient>1 1 1 1</ambient>
+                  </material>
+                </visual>
+                <collision name='obstacle2'>
+                  <geometry>
+                    <box>
+                      <size>0.1 0.1 0.5</size>
+                    </box>
+                  </geometry>
+                  <surface>
+                      <friction>
+                        <ode>
+                          <mu>10</mu>
+                          <mu2>10</mu2>
+                        </ode>
+                      </friction >
+                    </surface>
+                </collision>
+              </link>
+            </model>
 
     </world>
 </sdf>

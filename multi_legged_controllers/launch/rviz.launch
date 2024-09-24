@@ -1,12 +1,18 @@
 <launch>
-  <arg name="ns_1" default="alien1" />
-  <arg name="ns_2" default="alien2" />
+  <arg name="ns_1" default="robot_1" />
+  <arg name="ns_2" default="robot_2" />
   <arg name="robot_type" default="aliengo" />
   <arg name="rviz_config" default="$(find multi_legged_controllers)/config/rviz.rviz" />
+  <arg name="x" default="0.0" />
+  <arg name="y" default="0.0" />
+  <arg name="z" default="0.0" />
+
+  <node pkg="tf2_ros" type="static_transform_publisher" name="odom_tf_publisher"
+      args="$(arg x) $(arg y) $(arg z) 0 0 0 1 map rod_odom" />
 
   <group ns="$(arg ns_1)">
     <node pkg="tf2_ros" type="static_transform_publisher" name="odom_tf_publisher"
-      args="0 -0.5 0 0 0 0 1 map $(arg ns_1)_odom" />
+      args="0.0 -0.5 0.0 0 0 0 1 rod_odom $(arg ns_1)_odom" />
 
     <param name="legged_robot_description"
       command="$(find xacro)/xacro $(find multi_legged_controllers)/urdf/robot_with_prefix.xacro 
@@ -15,7 +21,7 @@
 
   <group ns="$(arg ns_2)">
     <node pkg="tf2_ros" type="static_transform_publisher" name="odom_tf_publisher"
-      args="0 0.5 0 0 0 0 1 map $(arg ns_2)_odom" />
+      args="0.0 0.5 0.0 0 0 0 1 rod_odom $(arg ns_2)_odom" />
 
     <param name="legged_robot_description"
       command="$(find xacro)/xacro $(find multi_legged_controllers)/urdf/robot_with_prefix.xacro 

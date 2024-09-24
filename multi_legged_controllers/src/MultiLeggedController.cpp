@@ -1,18 +1,17 @@
 
 #include <pinocchio/fwd.hpp>
 
-#include "multi_legged_controllers/MultiLeggedController.h"
-#include "multi_legged_controllers/MultiLeggedInterface.h"
-#include <legged_wbc/WeightedWbc.h>
 #include <ocs2_sqp/SqpMpc.h>
 #include <ocs2_legged_robot_ros/gait/GaitReceiver.h>
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
-#include <multi_legged_controllers/legged_estimation/ModifiedLinearKalmanFilter.h>
-#include "legged_perceptive_controllers/synchronized_module/PlanarTerrainReceiver.h"
-#include "legged_perceptive_interface/PerceptiveLeggedInterface.h"
+#include <legged_wbc/WeightedWbc.h>
+#include "multi_legged_controllers/PlanarTerrainReceiver.h"
 #include "legged_perceptive_interface/PerceptiveLeggedReferenceManager.h"
+#include "multi_legged_controllers/MultiLeggedInterface.h"
+#include <multi_legged_controllers/legged_estimation/ModifiedLinearKalmanFilter.h>
+#include "multi_legged_controllers/MultiLeggedController.h"
 
 #include <angles/angles.h>
 #include <pluginlib/class_list_macros.hpp>
@@ -223,7 +222,7 @@ void MultiPerceptiveController::setupMPCwithNh(const std::string ns) {
   auto planarTerrainReceiver =
       std::make_shared<PlanarTerrainReceiver>(nh, dynamic_cast<PerceptiveLeggedInterface&>(*leggedInterface_).getPlanarTerrainPtr(),
                                               dynamic_cast<PerceptiveLeggedInterface&>(*leggedInterface_).getSignedDistanceFieldPtr(),
-                                              "convex_plane_decomposition_ros/planar_terrain", "elevation");
+                                              "/convex_plane_decomposition_ros/planar_terrain", "elevation");
   mpc_->getSolverPtr()->addSynchronizedModule(planarTerrainReceiver);
 }
 

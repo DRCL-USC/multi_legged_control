@@ -58,7 +58,7 @@
     
 
     <xacro:sensor_t265 name="$(arg ns)_tracking_camera" topics_ns="tracking_camera" parent="$(arg ns)_base">
-         <origin xyz="0.35 0.0 0.0" rpy="0.0 -0.05 -0.0"/>
+         <origin xyz="0.3 0.0 0.0" rpy="0.0 -0.05 -0.0"/>
     </xacro:sensor_t265>
 
     <joint name="$(arg ns)_payload_joint" type="fixed">
@@ -69,7 +69,7 @@
 
     <link name="$(arg ns)_payload">
         <inertial>
-            <mass value="3"/>
+            <mass value="0.03"/>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <inertia ixx="0.025" ixy="0" ixz="0" iyy="0.021" iyz="0" izz="0.011"/>
         </inertial>
@@ -80,9 +80,9 @@
         </visual>
     </link>
 
-    <xacro:sensor_d435 name="$(arg ns)_front_camera" topics_ns="$(arg ns)/front_camera" parent="$(arg ns)_base">
+    <!-- <xacro:sensor_d435 name="$(arg ns)_front_camera" topics_ns="$(arg ns)/front_camera" parent="$(arg ns)_base">
            <origin xyz="0.16 0.048 0.30" rpy="0 0.54359877559 0"/>
-    </xacro:sensor_d435>
+    </xacro:sensor_d435> -->
 
     <xacro:if value="$(arg sim)">
     <!-- ros_control plugin -->

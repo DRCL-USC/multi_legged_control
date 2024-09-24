@@ -1,0 +1,178 @@
+targetDisplacementVelocity          0.31;
+targetRotationVelocity              0.8;
+
+obstacles
+{
+  pose
+  {
+    (0,0)  8.6  ; x1
+    (0,1)  0.0  ; y1
+    (0,2)  0.25 ; z1
+    (1,0)  6.05  ; x2
+    (1,1)  0.0  ; y2
+    (1,2)  1.45 ; z2
+  }
+
+  radius
+  { 
+    [0] 0.25 ; r1
+    [1] 1    ; r2
+  }
+}
+
+
+obstacles_2d
+{
+  pose
+  {
+    (0,0)  3.6   ; x1
+    (0,1)  -1.5  ; y1
+    (0,2)  0.0   ; z1
+  }
+
+  radius
+  { 
+    [0] 1.5 ; r1
+  }
+}
+
+2d_penalty_config
+{
+  mu                       5
+  delta                    3
+}
+
+penalty_config
+{
+  bounds
+  {
+  mu                       100
+  delta                    0.05
+  }
+
+  cbf
+  {
+  mu                       1 ; TODO
+  delta                    0.2 : TODO
+  }
+}
+
+height_bounds
+{
+  h_max    0.9 ; TODO
+  h_min    0.0 : TODO
+}
+
+; DDP settings
+ddp
+{
+  algorithm                      SLQ
+
+  nThreads                       1
+
+  maxNumIterations               1
+  minRelCost                     0.1
+  constraintTolerance            1e-3
+
+  displayInfo                    false
+  displayShortSummary            false
+  checkNumericalStability        false
+
+  AbsTolODE                      1e-9
+  RelTolODE                      1e-6
+  maxNumStepsPerSecond           100000
+  timeStep                       1e-2
+  backwardPassIntegratorType     ODE45
+
+  inequalityConstraintMu         100.0
+  inequalityConstraintDelta      1.1
+
+  preComputeRiccatiTerms         true
+
+  useFeedbackPolicy              false
+
+  strategy                       LINE_SEARCH
+  lineSearch
+  {
+    minStepLength                1e-3
+    maxStepLength                1.0
+    hessianCorrectionStrategy    EIGENVALUE_MODIFICATION
+    hessianCorrectionMultiple    1e-6
+  }
+}
+
+; Rollout settings
+rollout
+{
+  AbsTolODE                    1e-9
+  RelTolODE                    1e-6
+  timeStep                     1e-2
+  maxNumStepsPerSecond         100000
+  checkNumericalStability      false
+  integratorType               ODE45
+}
+
+; MPC settings
+mpc
+{
+  timeHorizon                 8.0   ; [s]
+  solutionTimeWindow          -1    ; maximum [s]
+  coldStart                   false
+
+  debugPrint                  false
+
+  mpcDesiredFrequency         100   ; [Hz]
+  mrtDesiredFrequency         400   ; [Hz]
+}
+
+; state weight matrix
+Q
+{
+  scaling 1e-1
+  (0,0)  2.0 ; x1
+  (1,1)  2.0 ; x2
+  (2,2)  2.0 ; x3
+  (3,3)  2.0 ; x4
+  (4,4)  2.0 ; x5
+  (5,5)  2.0 ; x6
+  (6,6)  2.0 ; x7
+  (7,7)  2.0 ; x8
+  (8,8)  2.0 ; x9
+  (9,9)  2.0 ; x10
+  (10,10)  2.0 ; x11
+  (11,11)  2.0 ; x12
+  (12,12)  2.0 ; x13
+}
+
+
+; control weight matrix
+R
+{
+  scaling 1e-2
+  (0,0)  2.0 ; x1
+  (1,1)  2.0 ; x2
+  (2,2)  2.0 ; x3
+  (3,3)  2.0 ; x4
+  (4,4)  2.0 ; x5
+  (5,5)  2.0 ; x6
+}
+
+
+; final state weight matrix
+Q_final
+{
+  scaling 1e0
+  (0,0)  2.0 ; x1
+  (1,1)  2.0 ; x2
+  (2,2)  2.0 ; x3
+  (3,3)  2.0 ; x4
+  (4,4)  2.0 ; x5
+  (5,5)  2.0 ; x6
+  (6,6)  2.0 ; x7
+  (7,7)  2.0 ; x8
+  (8,8)  2.0 ; x9
+  (9,9)  2.0 ; x10
+  (10,10)  2.0 ; x11
+  (11,11)  2.0 ; x12
+  (12,12)  2.0 ; x13
+}

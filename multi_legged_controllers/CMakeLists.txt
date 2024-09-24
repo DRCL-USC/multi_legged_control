@@ -37,6 +37,7 @@ add_library(${PROJECT_NAME}
         src/visualization/SphereVisualization.cpp
         src/legged_estimation/ModifiedStateEstimateBase.cpp
         src/legged_estimation/ModifiedLinearKalmanFilter.cpp
+        src/PlanarTerrainReceiver.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}
