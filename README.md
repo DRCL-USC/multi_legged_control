@@ -52,18 +52,6 @@ cd src/multi_legged_control/scripts
 tmuxp load simulation.yaml
 ```
 
-The Tmux session includes a window for the motion planner and two additional windows for decentralized loco-manipulation control for each robot. Detailed information about the loco-manipulation stack can be found [here](https://github.com/DRCL-USC/Loco_manipulation_control).
-
-The planner stack starts with this launch file, which loads all the core nodes:
-
-```
-roslaunch ocs2_object_manipulation_ros manipulation_stack.launch gui:=false rviz:=true multiplot:=false record_data:=false
-```
-
-This launch file contains several arguments. Setting `gui` to true enables Gazebo simulations. `rviz` enables RViz data visualization. `multiplot` plots the planner variables online, and `record_data` stores rostopic data related to the planner and decentralized controller into a ROS bag file.
-
-Once the stack is running, a new terminal will pop up, allowing you to enter the target position and orientation for the manipulated object. After specifying the target, the manipulation process will begin.
-
 # Citation 
 ```
 @misc{Sombolestan2024Safety-criticalTerrain,
