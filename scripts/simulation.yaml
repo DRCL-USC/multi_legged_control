@@ -13,7 +13,7 @@ windows:
         - sleep 10
         - roslaunch planner_ros planner.launch record_data:=true
     shell_command_before:
-      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - source $PWD/../../../devel/setup.bash 
       - export world_name=obstacle_course
 
   - window_name: Robot1
@@ -32,7 +32,7 @@ windows:
       #   - sleep 4
       #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
     shell_command_before:
-      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - source $PWD/../../../devel/setup.bash 
       - export ROBOT_TYPE=aliengo
       - export ROBOT_NAME=robot_1
 
@@ -52,7 +52,7 @@ windows:
       #   - sleep 4
       #   - rosrun teleop_twist_keyboard teleop_twist_keyboard.py __ns:=$ROBOT_NAME
     shell_command_before:
-      - source ~/Projects/ocs2_ws/devel/setup.bash 
+      - source $PWD/../../../devel/setup.bash 
       - export ROBOT_TYPE=aliengo
       - export ROBOT_NAME=robot_2
     
