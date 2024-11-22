@@ -1,0 +1,3 @@
+[submodule "Quadruped_Wrapper"]
+	path = Quadruped_Wrapper
+	url = https://github.com/DRCL-USC/Quadruped_Wrapper.git
