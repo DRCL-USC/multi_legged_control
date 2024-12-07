@@ -38,6 +38,7 @@ add_library(${PROJECT_NAME}
         src/legged_estimation/ModifiedStateEstimateBase.cpp
         src/legged_estimation/ModifiedLinearKalmanFilter.cpp
         src/PlanarTerrainReceiver.cpp
+        src/MRA_WBC.cpp
         )
 
 target_link_libraries(${PROJECT_NAME}
