@@ -152,28 +152,6 @@ namespace ocs2
                                            std::unique_ptr<StateCost>(new StateSoftConstraint(std::make_unique<Robot2CBFConstraint>(obstacles2dPtr_, obstacles2d_radius),
                                                                                               std::make_unique<SquaredHingePenalty>(cbf2dConfig))));
 
-      //  std::make_unique<RelaxedBarrierPenalty>(boundsConfig))));
-
-      // Box constraints
-      StateInputSoftBoxConstraint::BoxConstraint boxConstraint;
-
-      std::vector<StateInputSoftBoxConstraint::BoxConstraint> stateLimits;
-      stateLimits.reserve(STATE_DIM);
-
-      std::vector<StateInputSoftBoxConstraint::BoxConstraint> inputLimits;
-      inputLimits.reserve(INPUT_DIM);
-
-      boxConstraint.index = 0;
-      boxConstraint.lowerBound = 0;
-      boxConstraint.upperBound = 10;
-      boxConstraint.penaltyPtr.reset(new RelaxedBarrierPenalty(RelaxedBarrierPenalty::Config(0.1, 0.01)));
-      inputLimits.push_back(boxConstraint);
-
-      auto boxConstraints = std::make_unique<StateInputSoftBoxConstraint>(stateLimits, inputLimits);
-      boxConstraints->initializeOffset(0.0, vector_t::Zero(STATE_DIM), vector_t::Zero(INPUT_DIM));
-
-      problem_.softConstraintPtr->add("BoxConstraints", std::move(boxConstraints));
-
       // Initialization
       objectInitializerPtr_.reset(new DefaultInitializer(INPUT_DIM));
     }

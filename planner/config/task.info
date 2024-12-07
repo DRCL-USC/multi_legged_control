@@ -46,7 +46,7 @@ penalty_config
 {
   bounds
   {
-  mu                       100
+  mu                       0.1
   delta                    0.05
   }
 
@@ -59,8 +59,8 @@ penalty_config
 
 height_bounds
 {
-  h_max    0.9 ; TODO
-  h_min    0.0 : TODO
+  h_max    0.7 ; TODO
+  h_min    0.15 : TODO
 }
 
 ; DDP settings
@@ -148,9 +148,9 @@ Q
 ; control weight matrix
 R
 {
-  scaling 1e-2
-  (0,0)  2.0 ; x1
-  (1,1)  2.0 ; x2
+  scaling 1e-3
+  (0,0)  2000.0 ; x1
+  (1,1)  200.0 ; x2
   (2,2)  2.0 ; x3
   (3,3)  2.0 ; x4
   (4,4)  2.0 ; x5
