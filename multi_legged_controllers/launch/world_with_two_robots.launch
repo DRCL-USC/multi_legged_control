@@ -29,7 +29,7 @@
         sim:=true robot_type:=$(arg robot_type) ns_1:=$(arg ns_1) ns_2:=$(arg ns_2)" />
 
     <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" clear_params="true"
-        args="-x $(arg x) -y $(arg y) -z 1 -param connected_legged_robot_description -urdf -model combined_model"
+        args="-x $(arg x) -y $(arg y) -z 1.5 -param connected_legged_robot_description -urdf -model combined_model"
         output="screen" />
 
     <include file="$(find multi_legged_controllers)/launch/rviz.launch">

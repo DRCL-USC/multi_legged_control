@@ -6,7 +6,7 @@
 #include <ocs2_ros_interfaces/synchronized_module/RosReferenceManager.h>
 #include <ocs2_msgs/mpc_observation.h>
 #include <ocs2_ros_interfaces/common/RosMsgConversions.h>
-#include <legged_wbc/WeightedWbc.h>
+#include "multi_legged_controllers/MRA_WBC.h"
 #include "multi_legged_controllers/PlanarTerrainReceiver.h"
 #include "legged_perceptive_interface/PerceptiveLeggedReferenceManager.h"
 #include "multi_legged_controllers/MultiLeggedInterface.h"
@@ -81,7 +81,7 @@ bool MultiLeggedController::init(hardware_interface::RobotHW* robot_hw, ros::Nod
   currentObservation_.time = 0;
 
   // Whole body control
-  wbc_ = std::make_shared<WeightedWbc>(leggedInterface_->getPinocchioInterface(), leggedInterface_->getCentroidalModelInfo(),
+  wbc_ = std::make_shared<MRA_WBC>(leggedInterface_->getPinocchioInterface(), leggedInterface_->getCentroidalModelInfo(),
                                        *eeKinematicsPtr_);
   wbc_->loadTasksSetting(taskFile, verbose);
 

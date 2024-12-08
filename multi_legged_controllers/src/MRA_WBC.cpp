@@ -65,7 +65,7 @@ Task MRA_WBC::formulateBaseAccelMRATask(const vector_t &stateDesired, const vect
     centroidalMomentumRate.noalias() -= Aj * jointAccel;
 
     vector_t eta(12);
-    eta << qDesired.head(6) - qMeasured_.head(6), vDesired.head(6) - vMeasured_.head(6);
+    eta << stateDesired.segment<6>(6) - qMeasured_.head(6), stateDesired.head(6) - vMeasured_.head(6);
 
     Q_alpha = (K_alpha * eta.cwiseAbs()).asDiagonal();
 
@@ -138,6 +138,7 @@ Task MRA_WBC::formulateMRAConstraints(const vector_t &stateDesired, const vector
            formulateTorqueLimitsTask() +
            formulateFrictionConeTask() +
            formulateNoContactMotionTask();
+           // + CLFConstraint(stateDesired, inputDesired);
 }
 
 vector_t MRA_WBC::update(const vector_t &stateDesired, const vector_t &inputDesired, const vector_t &rbdStateMeasured, size_t mode, scalar_t period) {
