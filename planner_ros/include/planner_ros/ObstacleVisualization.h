@@ -73,11 +73,11 @@ public:
         marker.id = 2;
         marker.scale.x = 0.35;
         marker.scale.y = 0.4;
-        marker.scale.z = 0.45;
+        marker.scale.z = 0.55;
 
         marker.pose.position.x = 8.6;
         marker.pose.position.y = 0.0;
-        marker.pose.position.z = 0.2;
+        marker.pose.position.z = 0.275;
 
         markerArray.markers.push_back(marker);
 
