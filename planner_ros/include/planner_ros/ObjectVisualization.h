@@ -34,8 +34,6 @@ namespace ocs2
       void publishDesiredTrajectory(ros::Time timeStamp, const TargetTrajectories &targetTrajectories);
       visualization_msgs::Marker ObjectTrajectory(ros::Time timeStamp, const SystemObservation &observation);
       visualization_msgs::Marker ObjectTarget(ros::Time timeStamp, const CommandData &command);
-      visualization_msgs::Marker PayloadTrajectory(ros::Time timeStamp, const SystemObservation &observation);
-      visualization_msgs::Marker TimeVaryingLoad(ros::Time timeStamp, const SystemObservation &observation);
 
       ros::Publisher desiredBasePositionPublisher_, stateOptimizedPublisher_, objectPublisher_, obstaclesPublisher_;
       const std::string taskFile_;
