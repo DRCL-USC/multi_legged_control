@@ -69,17 +69,17 @@ public:
 
         markerArray.markers.push_back(marker);
 
-        // Obstacle 3
-        marker.id = 2;
-        marker.scale.x = 0.35;
-        marker.scale.y = 0.4;
-        marker.scale.z = 0.55;
+        // // Obstacle 3
+        // marker.id = 2;
+        // marker.scale.x = 0.35;
+        // marker.scale.y = 0.4;
+        // marker.scale.z = 0.55;
 
-        marker.pose.position.x = 8.6;
-        marker.pose.position.y = 0.0;
-        marker.pose.position.z = 0.275;
+        // marker.pose.position.x = 8.6;
+        // marker.pose.position.y = 0.0;
+        // marker.pose.position.z = 0.275;
 
-        markerArray.markers.push_back(marker);
+        // markerArray.markers.push_back(marker);
 
 
         obstaclesPublisher_.publish(markerArray);

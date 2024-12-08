@@ -338,7 +338,7 @@
         </visual>
       </link>
 
-      <link name="obstacle3">
+      <!-- <link name="obstacle3">
         <pose>7.6 0 0.875 0 0 0</pose>
         <collision name="obstacle3_collision">
           <geometry>
@@ -361,7 +361,7 @@
             <ambient>1 1 1 1</ambient>
           </material>
         </visual>
-      </link>
+      </link> -->
 
       <static>1</static>
     </model>
